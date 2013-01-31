@@ -65,7 +65,6 @@ struct Node* parseNode(char* line){
   
   //parse successors
   int size = 20;
-  int count = 0;
   node-> succ = (int *) malloc(sizeof(int)*size);
   while((token=strtok(NULL," "))){
     //check for identifier
@@ -73,7 +72,7 @@ struct Node* parseNode(char* line){
       break;
     }
     
-    if( count >= size ){
+    if( node->succCount >= size ){
       size =2*size;
       node->succ = realloc(node->succ, sizeof(int)*size);
       if (node->succ == NULL){
@@ -81,7 +80,7 @@ struct Node* parseNode(char* line){
 	exit(-1);
       }
     }
-    node->succ[count]=atoi(token);
+    node->succ[node->succCount]=atoi(token);
     node->succCount++;
   }
   
@@ -104,7 +103,7 @@ void printGame(Game* game){
     printf("%d %d %d ", node->id, node->priority,node->owner);
     int i = 0;
     while( i < node->succCount){
-      printf("-%d ",node->succ[i]);
+      printf("%d ",node->succ[i]);
       i++;
     }
     if ( node->name != NULL){
