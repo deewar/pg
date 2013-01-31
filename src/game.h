@@ -2,20 +2,20 @@
 #ifndef GAME_H
 #define GAME_H
 
-struct Node{
+typedef struct Node{
   int id;
   int priority;
   int owner;
+  int succCount;
   int* succ;
   char* name; //optional
 
-};
+}Node;
 
 
-struct Game{
-  int maxId;
-  struct Node* nodes;
-};
-
-
+typedef struct Game {
+  int maxIndex;
+  int nodeCount;
+  struct Node** nodes;
+}Game;
 #endif

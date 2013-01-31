@@ -1,5 +1,7 @@
 #include "parser.h"
 
 int main (void){
-  loadGame("test");
+  Game* g = loadGame("game");
+  printGame(g);
+  return 0;
 }

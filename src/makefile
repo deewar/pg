@@ -1,12 +1,26 @@
-All: parser main
+TARGET = main
+LIBS = -lm
+CC = gcc
+CFLAGS = -g -Wall
 
-main: parser
-	gcc main.c parser.o -o main
+.PHONY: clean all default
 
-parser:
-	gcc -c parser.c -o parser.o
+default: $(TARGET)
+all: default
+
+OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+.PRECIOUS: $(TARGET) $(OBJECTS)
+
+$(TARGET): $(OBJECTS)
+	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
 
 clean:
-	rm -rf *.o
-	rm -rf *~
-	rm -rf \#*\#
+	-rm -f *.o
+	-rm -f $(TARGET)
+	-rm -r *~
+	-rm -f \#*\#
