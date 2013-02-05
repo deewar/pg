@@ -13,9 +13,22 @@ typedef struct Node{
 }Node;
 
 
+
+typedef struct SortNode{
+  int nodeId;
+  int priority;  
+}SortNode;
+
+
 typedef struct Game {
   int maxIndex;
   int nodeCount;
+  SortNode *sortedNodes;
   struct Node** nodes;
 }Game;
+
+
+
+
 #endif
+

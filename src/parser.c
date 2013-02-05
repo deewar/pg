@@ -15,6 +15,8 @@ struct Game* loadGame(  const char *filename ){
     getline(&line,&lineSize,file);
     if ( strstr(line,"parity") == NULL){
       //file does not have max parity;
+      printf("Max nodes must be specified\n");
+      exit(-1);
       rewind(file);
     }else{ 
       char *tok = strtok(line," ");
@@ -38,6 +40,7 @@ struct Game* loadGame(  const char *filename ){
     }
 				   
   }
+  sortNodes(game);
   fclose(file);
   free( line);
   return game;
@@ -94,12 +97,13 @@ struct Node* parseNode(char* line){
 }
 
 
-
+//prints the game in sorted order
 void printGame(Game* game){
   printf( "parity %d\n" , game->maxIndex);
   int curr = 0;
-  while ( curr< game->nodeCount){
-    Node* node = game->nodes[curr];
+  for( ; curr < game->nodeCount; curr ++){
+    int n = game->sortedNodes[curr].nodeId;
+    Node* node = game->nodes[n];
     printf("%d %d %d ", node->id, node->priority,node->owner);
     int i = 0;
     while( i < node->succCount){
@@ -110,7 +114,42 @@ void printGame(Game* game){
       printf("\"%s\";",node->name);
     }
     puts("");
-    curr++;
   }
   
 }
+
+
+
+
+void printSortNodes( SortNode *s,  int count){
+  int i;
+  for ( i = 0 ; i < count ; i++){
+    printf("Node id :%d , priority %d \n" , s[i].nodeId, s[i].priority);
+  }
+}
+
+
+static int compareNode(const void *node1, const void *node2){
+  SortNode * n1 = (SortNode *) node1;
+  SortNode * n2 = (SortNode *) node2;
+  //printf("comparing %d , %d \n" ,n1->nodeId ,  n2->nodeId);
+  return n2->priority -  n1->priority;
+}
+
+
+
+void sortNodes(Game *game){
+  
+  int i;
+  SortNode *sortedNodes = malloc(sizeof(SortNode)*game->nodeCount);
+  for ( i = 0; i < game->nodeCount; i++){
+    sortedNodes[i].nodeId = game->nodes[i]->id;
+    sortedNodes[i].priority = game->nodes[i]->priority;    
+  }
+  game->sortedNodes= sortedNodes;
+  //printSortNodes(sortedNodes,game->nodeCount);
+  qsort(sortedNodes,game->nodeCount,sizeof(SortNode),compareNode);  
+  //printSortNodes(game->sortedNodes, game->nodeCount);
+
+}
+
