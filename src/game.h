@@ -7,9 +7,11 @@ typedef struct Node{
   int priority;
   int owner;
   int succCount;
-  int* succ;
-  char* name; //optional
-
+  int predSize;
+  int predCount;
+  int **succ;
+  char**name; //optional
+  int **pred; 
 }Node;
 
 
@@ -24,7 +26,7 @@ typedef struct Game {
   int maxIndex;
   int nodeCount;
   SortNode *sortedNodes;
-  struct Node** nodes;
+  Node **nodes;
 }Game;
 
 

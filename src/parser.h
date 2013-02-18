@@ -10,6 +10,9 @@
 
 struct Node* parseNode(  char* line);
 struct Game* loadGame(  const char *filename );
+
 void printGame(Game *game);
 void sortNodes(Game *game);
+void generatePredecessors( Game *game);
+void addPred(Node *node, int id);
 #endif
