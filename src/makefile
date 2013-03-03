@@ -1,7 +1,7 @@
 TARGET = main
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall -std=c99
+CFLAGS = -g -Wall 
 
 .PHONY: clean all default
 

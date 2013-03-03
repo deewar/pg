@@ -34,16 +34,14 @@ struct Game* loadGame(  const char *filename ){
 
       Node *node = parseNode(line);
 
-      printf("%d\n", *(node->succ));
-      printf("%d\n", **(node->succ));
-      
+          
       game->nodes[node->id] = node;  
       game->nodeCount++;
     }
 				   
   }
   sortNodes(game);
-  //generatePredecessors(game);
+  generatePredecessors(game);
   fclose(file);
   free( line);
   return game;
@@ -53,7 +51,8 @@ struct Game* loadGame(  const char *filename ){
 
 struct Node* parseNode(char* line){
 
-  struct Node* node = (struct Node*) malloc(sizeof(struct Game));
+  struct Node* node = (struct Node*) malloc(sizeof(Node));
+  
   char* token = strtok(line, " ");
   //parse the id;
   node->id = atoi(token);
@@ -70,11 +69,10 @@ struct Node* parseNode(char* line){
   
   
   //parse successors
-  int size = 20;
   
+  int size = 1;
   int *succ = (int*) malloc(sizeof(int)*size);
-  
-  
+  node->succCount = 0;
   while((token=strtok(NULL," "))){
     //check for identifier
     if (strchr(token,'"')!= NULL){
@@ -83,33 +81,34 @@ struct Node* parseNode(char* line){
     
     if( node->succCount >= size ){
       size =2*size;
+      
       succ = realloc(succ, sizeof(int)*size);
+
       if (succ == NULL){
 	printf("realloc failed");
 	exit(-1);
       }
     }
-    int s = atoi(token);
-    memcpy(succ + node->succCount * sizeof(int) , &s , sizeof(int));
+    succ[node->succCount] =atoi(token);
+    
     node->succCount++;
   }
   node->succ = (int **) malloc(sizeof(int **));
   *(node->succ) = succ;
-
-  
-  printf("%d\n", *(node->succ));
-  printf("%d\n", **(node->succ));
+  //printf("%d",succ[node->succCount-1]);
+  //printf("%p %p \n", &succ[0] , &(*(node->succ)[0]));
+  //printf("%d",*(node->succ)[node->succCount-1]);
 
   //identifier present
    if( token != NULL){
     size = strlen(token)-4;
-    //node->name = malloc(sizeof(char**));
-    //*(node->name) = (char *) malloc(sizeof(char)*size);
-    //memcpy(*(node->name),token+1,size);
-    //node->name= NULL;
+    node->name = malloc(sizeof(char**));
+    *(node->name) = (char *) malloc(sizeof(char)*size);
+    memcpy(*(node->name),token+1,size);
+    
   }else{
-     //node->name= NULL;
-   }
+    node->name= NULL;
+  }
   
   return node;
 }
@@ -125,16 +124,15 @@ void printGame(Game* game){
     printf("%d %d %d ", node->id, node->priority,node->owner);
     int i = 0;
     
-
     while( i < node->succCount){
-      printf("%d ",**node->succ);
+      printf("%d ",(*(node->succ))[i]);
       i++;
     }
     
     printf(" pred: ");
     i = 0;
     while ( i < node->predCount){
-      // printf("%d ", node->pred[i]);
+      printf("%d ", (*(node->pred))[i]);
       i++;
     }
     if ( node->name != NULL){
@@ -183,39 +181,46 @@ void sortNodes(Game *game){
 
 
 void generatePredecessors( Game *game){
-  /*
+  
   int i;
   for (i = 0; i < game->nodeCount ; i ++ ){
     int j;
     Node *node = game->nodes[i];
-    printf ("node %d has successors" , node->id);
+    //printf ("node %d has successors" , node->id);
     for ( j = 0 ; j < node->succCount; j ++){
-      int succ = node->succ[j];
-      printf("%d " , succ);
+      int succ = (*(node->succ))[j];
       addPred(game->nodes[succ],node->id);
     }
-    puts("\n");
   }
-  */
+  
 }
 
 
 void addPred(Node *node , int id){
-  
-  /*
-  printf("wtf %d" , node->predSize);
+
+
   if ( node->predSize == 0){
+
     node->predSize = 4;
-    node->pred = (int *) malloc(sizeof(int)*node->predSize);
+    node->pred = malloc(sizeof(int**));
+    *(node->pred) = (int *) malloc(sizeof(int)*node->predSize);
   }
   
   if( node->predCount >= node->predSize){
     node->predSize = node->predSize*2;
-    node->pred = realloc(node->pred,sizeof(int)*node->predSize);
+    *(node->pred) = realloc(*(node->pred),sizeof(int)*node->predSize);
   }
 
-  //node->pred[node->predCount] = id;
+  //check if link already present
+  int i ;
+  for ( i = 0 ; i < node->predCount ; i++){
+    if ( (*(node->pred))[i] == id){
+      return;
+    }
+  }
+  
+  (*(node->pred))[node->predCount] = id;
   node->predCount ++;
-  */
+  
 
 }
