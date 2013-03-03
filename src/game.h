@@ -22,10 +22,16 @@ typedef struct SortNode{
 }SortNode;
 
 
+typedef struct NodeLookup{
+  int index;
+}NodeLookup;
+
 typedef struct Game {
-  int maxIndex;
+  int maxIndex ;
   int nodeCount;
   SortNode *sortedNodes;
+  int lookupSize;
+  NodeLookup *lookup;
   Node **nodes;
 }Game;
 

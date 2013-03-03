@@ -25,7 +25,11 @@ struct Game* loadGame(  const char *filename ){
     }
     
     game->nodes = (Node **) malloc(sizeof(Node *)*gameSize);
- 
+    
+    //allocate memory to create the lookup
+    game->lookupSize = gameSize;
+    game->lookup = (NodeLookup *) malloc(sizeof(NodeLookup)*game->lookupSize);
+									
     while ( getline(&line,&lineSize,file) >= 0 ){
       char* tmp = (char *) malloc(sizeof(char)*lineSize);
 
@@ -33,9 +37,21 @@ struct Game* loadGame(  const char *filename ){
       memcpy(tmp ,line,lineSize);
 
       Node *node = parseNode(line);
+      
+      //printf("node %d parsed \n", game->nodeCount);    
+      //game->nodes[node->id] = node;  
+      
+      int nodeCount = game->nodeCount;
+      game->nodes[nodeCount] = node;
+      
+      while (  game->lookupSize <= node->id ){
+	//need a bigger lookup double the size
+	
+	game->lookupSize *= 2;
+	game->lookup = (NodeLookup *) realloc(game->lookup,sizeof(NodeLookup)*game->lookupSize);
+      }
+      game->lookup[node->id].index = game->nodeCount;
 
-          
-      game->nodes[node->id] = node;  
       game->nodeCount++;
     }
 				   
@@ -50,7 +66,10 @@ struct Game* loadGame(  const char *filename ){
 
 
 struct Node* parseNode(char* line){
-
+  //remove semi colon from the end.
+  int i ;
+  for ( i = strlen(line)-1; line[i] != ';'; i--);
+  line[i] =' ';
   struct Node* node = (struct Node*) malloc(sizeof(Node));
   
   char* token = strtok(line, " ");
@@ -70,46 +89,56 @@ struct Node* parseNode(char* line){
   
   //parse successors
   
-  int size = 1;
+  int size = 4;
   int *succ = (int*) malloc(sizeof(int)*size);
   node->succCount = 0;
-  while((token=strtok(NULL," "))){
-    //check for identifier
+  while((token=strtok(NULL,","))){
+    //if identifier prensent handle it
     if (strchr(token,'"')!= NULL){
-      break;
+      //the last succ
+      char* rest = NULL;
+      token  = strtok_r(token," ",&rest);
+            
+      char *begin = strchr(rest,'"');
+      char *end = strrchr(rest,'"');
+      int strSize = end-begin;
+      
+      node->name = malloc(sizeof(char**));
+      *(node->name) = (char *) malloc(sizeof(char)*(strSize));
+      
+      //copy name across;
+      int i;
+      for ( i = 0 ; i < strSize-1; i++){
+	(*(node->name))[i]= begin[i+1];
+      }
+      (*(node->name))[strSize-1]= '\0';
     }
     
     if( node->succCount >= size ){
       size =2*size;
       
-      succ = realloc(succ, sizeof(int)*size);
-
+       succ = realloc(succ, sizeof(int)*size);
+      
       if (succ == NULL){
 	printf("realloc failed");
 	exit(-1);
       }
     }
+    
     succ[node->succCount] =atoi(token);
     
     node->succCount++;
   }
   node->succ = (int **) malloc(sizeof(int **));
   *(node->succ) = succ;
-  //printf("%d",succ[node->succCount-1]);
-  //printf("%p %p \n", &succ[0] , &(*(node->succ)[0]));
-  //printf("%d",*(node->succ)[node->succCount-1]);
-
-  //identifier present
-   if( token != NULL){
-    size = strlen(token)-4;
-    node->name = malloc(sizeof(char**));
-    *(node->name) = (char *) malloc(sizeof(char)*size);
-    memcpy(*(node->name),token+1,size);
-    
-  }else{
-    node->name= NULL;
-  }
   
+
+  //printf("nodeid %d , node succount %d\n", node->id , node->succCount);
+  //printf("%d\n",succ[node->succCount-1]);
+  //printf("%d\n",*(node->succ)[node->succCount-1]);
+
+
+   
   return node;
 }
 
@@ -120,23 +149,24 @@ void printGame(Game* game){
   int curr = 0;
   for( ; curr < game->nodeCount; curr ++){
     int n = game->sortedNodes[curr].nodeId;
+    n = game->lookup[n].index;
     Node* node = game->nodes[n];
-    printf("%d %d %d ", node->id, node->priority,node->owner);
+    printf("ID:=%d PRI:=%d OWNER:=%d ", node->id, node->priority,node->owner);
     int i = 0;
-    
+    printf(" SUCC: ");
     while( i < node->succCount){
       printf("%d ",(*(node->succ))[i]);
       i++;
     }
     
-    printf(" pred: ");
+    printf(" PRED: ");
     i = 0;
     while ( i < node->predCount){
       printf("%d ", (*(node->pred))[i]);
       i++;
     }
     if ( node->name != NULL){
-      printf("name \"%s\";",*(node->name));
+      printf("NAME:= \"%s\";",*(node->name));
     }
     puts("");
   }
@@ -171,8 +201,10 @@ void sortNodes(Game *game){
     sortedNodes[i].nodeId = game->nodes[i]->id;
     sortedNodes[i].priority = game->nodes[i]->priority;    
   }
+
   game->sortedNodes= sortedNodes;
   //printSortNodes(sortedNodes,game->nodeCount);
+
   qsort(sortedNodes,game->nodeCount,sizeof(SortNode),compareNode);  
   //printSortNodes(game->sortedNodes, game->nodeCount);
 
@@ -188,7 +220,9 @@ void generatePredecessors( Game *game){
     Node *node = game->nodes[i];
     //printf ("node %d has successors" , node->id);
     for ( j = 0 ; j < node->succCount; j ++){
-      int succ = (*(node->succ))[j];
+      int succId = (*(node->succ))[j];
+      //find the successor from the lookup
+      int succ = game->lookup[succId].index;
       addPred(game->nodes[succ],node->id);
     }
   }
@@ -197,8 +231,7 @@ void generatePredecessors( Game *game){
 
 
 void addPred(Node *node , int id){
-
-
+  
   if ( node->predSize == 0){
 
     node->predSize = 4;
