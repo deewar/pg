@@ -9,7 +9,7 @@ struct Game* loadGame(  const char *filename ){
   FILE *file = fopen ( filename, "r" );
   
   Game *game = (Game *) malloc( sizeof(Game));
-
+  game->sortedNodes = NULL;
   int gameSize = 200;
   if (file != NULL){
     getline(&line,&lineSize,file);
@@ -24,8 +24,9 @@ struct Game* loadGame(  const char *filename ){
       gameSize = game->maxIndex = atoi(tok);
     }
     
-    game->nodes = (Node **) malloc(sizeof(Node *)*gameSize);
-    
+    game->nodes = (Node **) malloc(sizeof(Node *) *gameSize);
+
+    game->nodeCount = 0;
     //allocate memory to create the lookup
     game->lookupSize = gameSize;
     game->lookup = (NodeLookup *) malloc(sizeof(NodeLookup)*game->lookupSize);
@@ -37,18 +38,25 @@ struct Game* loadGame(  const char *filename ){
       memcpy(tmp ,line,lineSize);
 
       Node *node = parseNode(line);
-      
+      free(tmp);
       //printf("node %d parsed \n", game->nodeCount);    
-      //game->nodes[node->id] = node;  
-      
+            
       int nodeCount = game->nodeCount;
+      
+      if ( nodeCount >= gameSize ){
+	//more nodes than anticipated.. 
+	gameSize = game->maxIndex = gameSize *2;
+	game->nodes = (Node **) realloc(game->nodes,sizeof(Node *) * gameSize);
+      }
       game->nodes[nodeCount] = node;
       
+
       while (  game->lookupSize <= node->id ){
 	//need a bigger lookup double the size
-	
+	//printf("reloccing for %d  %p \n",node->id, game->lookup);
 	game->lookupSize *= 2;
-	game->lookup = (NodeLookup *) realloc(game->lookup,sizeof(NodeLookup)*game->lookupSize);
+	NodeLookup *tmp = (NodeLookup *) realloc(game->lookup,sizeof(NodeLookup)*game->lookupSize);
+	game->lookup = tmp;
       }
       game->lookup[node->id].index = game->nodeCount;
 
@@ -71,7 +79,12 @@ struct Node* parseNode(char* line){
   for ( i = strlen(line)-1; line[i] != ';'; i--);
   line[i] =' ';
   struct Node* node = (struct Node*) malloc(sizeof(Node));
-  
+  node->succCount = 0;
+  node->predSize = 0;
+  node->predCount = 0;
+  node->succ = NULL;
+  node->name = NULL;
+  node->pred = NULL;
   char* token = strtok(line, " ");
   //parse the id;
   node->id = atoi(token);
@@ -194,7 +207,7 @@ static int compareNode(const void *node1, const void *node2){
 
 
 void sortNodes(Game *game){
-  
+   
   int i;
   SortNode *sortedNodes = malloc(sizeof(SortNode)*game->nodeCount);
   for ( i = 0; i < game->nodeCount; i++){
@@ -207,7 +220,7 @@ void sortNodes(Game *game){
 
   qsort(sortedNodes,game->nodeCount,sizeof(SortNode),compareNode);  
   //printSortNodes(game->sortedNodes, game->nodeCount);
-
+  
 }
 
 
@@ -218,15 +231,18 @@ void generatePredecessors( Game *game){
   for (i = 0; i < game->nodeCount ; i ++ ){
     int j;
     Node *node = game->nodes[i];
-    //printf ("node %d has successors" , node->id);
+    //node->predSize = 0;
+    //node->pred = NULL;
+    //printf("%d\n", node->id);
     for ( j = 0 ; j < node->succCount; j ++){
       int succId = (*(node->succ))[j];
       //find the successor from the lookup
       int succ = game->lookup[succId].index;
-      addPred(game->nodes[succ],node->id);
+      Node *n = game->nodes[succ];
+      addPred(n,node->id);
     }
   }
-  
+   
 }
 
 
@@ -256,4 +272,58 @@ void addPred(Node *node , int id){
   node->predCount ++;
   
 
+}
+
+void deleteNodes(Node ** nodes, int count){
+  int i ;
+  for ( i = 0 ; i < count;  i++){
+    Node *node = nodes[i];
+    if (node->succ!= NULL){
+      if( *node->succ != NULL){
+	free(*node->succ);
+      }
+      free(node->succ);
+      node->succ = NULL;
+    }
+    if ( node ->name != NULL){
+      if ( *node->name !=NULL){
+	free(*node->name);
+      }
+      free(node->name);
+      node->name = NULL;
+    }
+    if ( node ->pred != NULL){
+      if ( *node->pred != NULL){
+	free(*node->pred);
+      }
+      free(node->pred);
+      node->pred = NULL;
+    }
+
+    if ( node != NULL){
+      free(node);
+    }
+  }
+
+  //free((*nodes));
+  *nodes = NULL;
+}
+
+
+
+void deleteGame(Game *game){
+  
+  if (game->sortedNodes!= NULL){
+    free(game->sortedNodes);
+  }
+  
+  if ( game->lookup != NULL){
+    free(game->lookup);
+  }
+  
+  deleteNodes(game->nodes,game->nodeCount);
+  
+  free(game->nodes);
+  
+  free(game);
 }

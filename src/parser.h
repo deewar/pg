@@ -15,4 +15,6 @@ void printGame(Game *game);
 void sortNodes(Game *game);
 void generatePredecessors( Game *game);
 void addPred(Node *node, int id);
+void deleteNodes(Node **nodes, int count);
+void deleteGame(Game *game);
 #endif

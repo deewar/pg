@@ -31,8 +31,8 @@ typedef struct Game {
   int nodeCount;
   SortNode *sortedNodes;
   int lookupSize;
-  NodeLookup *lookup;
   Node **nodes;
+  NodeLookup *lookup;
 }Game;
 
 
