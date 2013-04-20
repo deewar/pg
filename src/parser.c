@@ -10,6 +10,13 @@ struct Game* loadGame(  const char *filename ){
   
   Game *game = (Game *) malloc( sizeof(Game));
   game->sortedNodes = NULL;
+  game->w0Size = 5; //initially 5 nodes
+  game->w0Count = 0;
+  game->w0 = malloc(sizeof (int)*game->w0Size);
+  game->w1Size = 5; //initially 5 nodes
+  game->w1Count = 0;
+  game->w1 = malloc(sizeof (int)*game->w1Size);
+
   int gameSize = 200;
   if (file != NULL){
     getline(&line,&lineSize,file);
@@ -305,7 +312,6 @@ void deleteNodes(Node ** nodes, int count){
     }
   }
 
-  //free((*nodes));
   *nodes = NULL;
 }
 
@@ -324,6 +330,7 @@ void deleteGame(Game *game){
   deleteNodes(game->nodes,game->nodeCount);
   
   free(game->nodes);
-  
+  free(game->w0);
+  free(game->w1);
   free(game);
 }

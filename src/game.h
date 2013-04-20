@@ -33,6 +33,12 @@ typedef struct Game {
   int lookupSize;
   Node **nodes;
   NodeLookup *lookup;
+  int *w0;
+  int w0Count;
+  int w0Size;
+  int *w1;
+  int w1Count;
+  int w1Size;
 }Game;
 
 
