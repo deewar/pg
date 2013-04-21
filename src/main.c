@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "solver.h"
 
 int main (int argc, char *argv[]){
   char *name = "games/game";
@@ -6,6 +7,7 @@ int main (int argc, char *argv[]){
     name = argv[1];
   }
   Game* g = loadGame(name);
+  generateAttractors(g , 1);
   printGame(g);
   deleteGame(g);
   return 0;

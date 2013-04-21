@@ -9,9 +9,9 @@ typedef struct Node{
   int succCount;
   int predSize;
   int predCount;
-  int **succ;
-  char**name; //optional
-  int **pred; 
+  int *succ;
+  char*name; //optional
+  int *pred; 
 }Node;
 
 

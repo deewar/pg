@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-for f in $( find ./games/ ) 
+for f in $( find ./games/ -type f  -iname "*.game" ) 
 do 
-    ./main $f | tee $f.result ;
+    valgrind ./main $f | tee $f.result ;
 done
