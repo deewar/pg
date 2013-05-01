@@ -1,5 +1,5 @@
 #include "parser.h"
-
+#include <stdbool.h>
 
 
 
@@ -14,13 +14,9 @@ struct Game* loadGame(  const char *filename ){
   
   Game *game = (Game *) malloc( sizeof(Game));
   game->sortedNodes = NULL;
-  game->w0Size = 5; //initially 5 nodes
-  game->w0Count = 0;
-  game->w0 = malloc(sizeof (int)*game->w0Size);
-  game->w1Size = 5; //initially 5 nodes
-  game->w1Count = 0;
-  game->w1 = malloc(sizeof (int)*game->w1Size);
-
+  game->w0 = initList();
+  game->w1 = initList();
+  
   int gameSize = 200;
   if (file != NULL){
     getline(&line,&lineSize,file);
@@ -43,6 +39,13 @@ struct Game* loadGame(  const char *filename ){
     game->lookup = (NodeLookup *) malloc(sizeof(NodeLookup)*game->lookupSize);
 									
     while ( getline(&line,&lineSize,file) >= 0 ){
+
+      if (strlen(line) < 5 ){
+	//valid lines should be atleast this long, node id, parity and owner.
+	//invalid line... continue;
+	printf("invalid line :[%s] \n" , line);
+	continue;
+      }
       char* tmp = (char *) malloc(sizeof(char)*lineSize);
 
       //copying required cause of segfaults when closing the files/
@@ -75,6 +78,13 @@ struct Game* loadGame(  const char *filename ){
     }
 				   
   }
+  //shrink the game since we are done with it.. not efficient for loading but wont effect solve
+  //performance.
+  game->nodes = (Node **) realloc(game->nodes,sizeof(Node *) * (game->nodeCount));
+  if ( game->nodes ==  NULL){
+    puts("crashed when squeezing game");
+    exit(-1);
+  }
   sortNodes(game);
   generatePredecessors(game);
   fclose(file);
@@ -90,13 +100,9 @@ struct Node* parseNode(char* line){
   for ( i = strlen(line)-1; line[i] != ';'; i--);
   line[i] ='\0';
   struct Node* node = (struct Node*) malloc(sizeof(Node));
-  node->succCount = 0;
-  node->predSize = 0;
-  node->predCount = 0;
-  node->succ = NULL;
   node->name = NULL;
-  node->pred = NULL;
-
+  node->pred = initList();
+  node->succ = initList();
   
   char *begin = strchr(line,'"');
   char *end = strrchr(line,'"');
@@ -132,9 +138,7 @@ struct Node* parseNode(char* line){
   
   //parse successors
   
-  int size = 4;
-  int *succ = (int*) malloc(sizeof(int)*size);
-  node->succCount = 0;
+
   while((token=strtok(NULL,","))){
     //if identifier prensent handle it
     if (strchr(token,'"')!= NULL){
@@ -145,24 +149,11 @@ struct Node* parseNode(char* line){
       
     }
     
-    if( node->succCount >= size ){
-      size =2*size;
-      
-       succ = realloc(succ, sizeof(int)*size);
-      
-      if (succ == NULL){
-	printf("realloc failed");
-	exit(-1);
-      }
-    }
+    addToList_u(node->succ,atoi(token),true);
     
-    succ[node->succCount] =atoi(token);
-    
-    node->succCount++;
   }
-  node->succ = succ;
-  
-
+  //successors read.. free remaining memory
+  compressList(node->succ);
   //printf("nodeid %d , node succount %d\n", node->id , node->succCount);
   //printf("%d\n",succ[node->succCount-1]);
   //printf("%d\n",*(node->succ)[node->succCount-1]);
@@ -179,20 +170,19 @@ void printGame(Game* game){
   int curr = 0;
   for( ; curr < game->nodeCount; curr ++){
     int n = game->sortedNodes[curr].nodeId;
-    n = game->lookup[n].index;
-    Node* node = game->nodes[n];
+    Node* node = getNodeById(game,n);
     printf("ID:=%d PRI:=%d OWNER:=%d ", node->id, node->priority,node->owner);
     int i = 0;
     printf(" SUCC: ");
-    while( i < node->succCount){
-      printf("%d ",(node->succ)[i]);
+    while( i < node->succ->count){
+      printf("%d ",(node->succ->items)[i]);
       i++;
     }
     
     printf(" PRED: ");
     i = 0;
-    while ( i < node->predCount){
-      printf("%d ", (node->pred)[i]);
+    while ( i < node->pred->count){
+      printf("%d ", (node->pred->items)[i]);
       i++;
     }
     if ( node->name != NULL){
@@ -251,69 +241,38 @@ void generatePredecessors( Game *game){
     //node->predSize = 0;
     //node->pred = NULL;
     //printf("%d\n", node->id);
-    for ( j = 0 ; j < node->succCount; j ++){
-      int succId = (node->succ)[j];
+    for ( j = 0 ; j < node->succ->count; j ++){
+      int succId = (node->succ->items)[j];
       //find the successor from the lookup
       int succ = game->lookup[succId].index;
       Node *n = game->nodes[succ];
-      addPred(n,node->id);
+      addToList_u(n->pred,node->id,true);
     }
+  }
+
+  //since predecessors have been generated squeeze pred
+  for ( i = 0 ; i < game->nodeCount; i++){
+    Node *node = game->nodes[i];
+    compressList(node->pred);
   }
    
 }
 
 
-void addPred(Node *node , int id){
-  
-  if ( node->predSize == 0){
-
-    node->predSize = 4;
-    node->pred = (int *) malloc(sizeof(int)*node->predSize);
-  }
-  
-  if( node->predCount >= node->predSize){
-    node->predSize = node->predSize*2;
-    node->pred = realloc(node->pred,sizeof(int)*node->predSize);
-  }
-
-  //check if link already present
-  int i ;
-  for ( i = 0 ; i < node->predCount ; i++){
-    if ( (node->pred)[i] == id){
-      return;
-    }
-  }
-  
-  (node->pred)[node->predCount] = id;
-  node->predCount ++;
-  
-
-}
 
 void deleteNodes(Node ** nodes, int count){
   int i ;
   for ( i = 0 ; i < count;  i++){
     Node *node = nodes[i];
     if (node->succ!= NULL){
-      /*if( *node->succ != NULL){
-	free(*node->succ);
-      }*/
-      free(node->succ);
-      node->succ = NULL;
+      deleteList(&node->succ);
     }
     if ( node ->name != NULL){
-      /*if ( *node->name !=NULL){
-	free(*node->name);
-	}*/
       free(node->name);
       node->name = NULL;
     }
     if ( node ->pred != NULL){
-      /*if ( *node->pred != NULL){
-	free(*node->pred);
-	}*/
-      free(node->pred);
-      node->pred = NULL;
+      deleteList(&node->pred);
     }
 
     if ( node != NULL){
@@ -339,7 +298,7 @@ void deleteGame(Game *game){
   deleteNodes(game->nodes,game->nodeCount);
   
   free(game->nodes);
-  free(game->w0);
-  free(game->w1);
+  deleteList(&game->w0);
+  deleteList(&game->w1);
   free(game);
 }

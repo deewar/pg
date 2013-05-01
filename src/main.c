@@ -7,7 +7,9 @@ int main (int argc, char *argv[]){
     name = argv[1];
   }
   Game* g = loadGame(name);
-  generateAttractors(g , 1);
+  puts("attractors");
+  psol(g);
+  
   printGame(g);
   deleteGame(g);
   return 0;

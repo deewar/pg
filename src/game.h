@@ -1,17 +1,19 @@
 
 #ifndef GAME_H
 #define GAME_H
+#include "list.h"
+
+
+
+
 
 typedef struct Node{
   int id;
   int priority;
   int owner;
-  int succCount;
-  int predSize;
-  int predCount;
-  int *succ;
+  List *succ;
   char*name; //optional
-  int *pred; 
+  List *pred; 
 }Node;
 
 
@@ -33,13 +35,16 @@ typedef struct Game {
   int lookupSize;
   Node **nodes;
   NodeLookup *lookup;
-  int *w0;
-  int w0Count;
-  int w0Size;
-  int *w1;
-  int w1Count;
-  int w1Size;
+  List *w0;
+  List *w1;
 }Game;
+
+
+inline Node * getNodeById(Game *game,int id);
+
+
+inline void removeFromGame(Game *game,List *l);
+
 
 
 
