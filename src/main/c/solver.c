@@ -3,8 +3,6 @@
 #include "game.h"
 
 
-
-
 void psol(Game *game){
   int i ;
   List* attractorSet = initList();
@@ -29,6 +27,14 @@ void psol(Game *game){
 }
 
 
+inline void addPreds(Node *node, List *list){
+  int j ;
+
+  for ( j = 0 ; j < node->pred->count ;  j ++){
+    addToList_u(list,node->pred->items[j],true);
+  }
+}
+
 
 
 void generateAtractorsForAttractors(Game *game, List *attractors , int player){
@@ -43,11 +49,7 @@ void generateAtractorsForAttractors(Game *game, List *attractors , int player){
     Node *node = getNodeById(game,id);
     if (node == NULL) continue;
 
-    int j ;
-
-    for ( j = 0 ; j < node->pred->count ;  j ++){
-      addToList(nodesToTest,node->pred->items[j]);
-    }
+    
   }
 
   resizeList(nodesForNextIteration,nodesToTest->size);
@@ -61,7 +63,21 @@ void generateAtractorsForAttractors(Game *game, List *attractors , int player){
     int size = nodesToTest->count;
     
     for( i = 0 ; i < size ; i ++){
+      int id = popFromList(nodesToTest);
+      addToList(nodesChecked,id);
       
+      Node *node = getNodeById(id);
+      if (node  == NULL) continue;
+      
+      if ( node->owner ==  player){
+	addToList_u(attractorSet, id , true);
+	attractorSetModfied = true;
+        int j;
+	for( j = 0 ; j < node->pred.
+      }else{
+	
+      }
+
     }
 
   }while(attractorSetModified);
@@ -105,12 +121,12 @@ void  generateAttractors(Game *game , Node  *node , int winner  , List *attracto
 
       if ( curr->owner == winner){
 	//owner is the same atleast one edge must go to the attractor set.
-	addToList(attractorSet , currNodeId);
+	addToList_u(attractorSet , currNodeId,true);
 	int j;
 	for ( j = 0 ; j < curr->pred->count; j++ ){
 	  if (!listContains(nodesChecked,curr->pred->items[j]) &&
 	      !listContains(attractorSet,curr->pred->items[j])){
-	    addToList(nodesForNextIteration,curr->pred->items[j]);
+	    addToList_u(nodesForNextIteration,curr->pred->items[j],true);
 	  }
 	}
 	
