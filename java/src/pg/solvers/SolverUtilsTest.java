@@ -16,7 +16,7 @@ public class SolverUtilsTest {
     @Test
     public void testFatalAtrractorPDF1_Attr() throws Exception {
         String path ="games/papers/fatal_attractors1.game";
-        Game g = Parser.parseGame(path);
+        Game g = Parser.parsePsolGame(path);
         HashSet<Integer> attractorIds = new HashSet<Integer>();
         attractorIds.add(6);
         attractorIds.add(4);
@@ -27,7 +27,7 @@ public class SolverUtilsTest {
     @Test
     public void testFatalAtrractorPDF1_Monotone() throws Exception {
         String path ="games/papers/fatal_attractors1.game";
-        Game g = Parser.parseGame(path);
+        Game g = Parser.parsePsolGame(path);
         HashSet<Integer> attractorIds = new HashSet<Integer>();
         assertTrue(equalSets(testMonotone(6, g),attractorIds));
     }
@@ -35,7 +35,7 @@ public class SolverUtilsTest {
     @Test
     public void testGenerateAttractor() throws Exception {
         String path ="games/game.game";
-        Game g = Parser.parseGame(path);
+        Game g = Parser.parsePsolGame(path);
 
         HashSet<Integer> attractorIds = new HashSet<Integer>();
         attractorIds.add(1);
@@ -47,7 +47,7 @@ public class SolverUtilsTest {
     @Test
     public void testGenerateMonotoneAttractor() throws Exception {
         String path ="games/game.game";
-        Game g = Parser.parseGame(path);
+        Game g = Parser.parsePsolGame(path);
 
         HashSet<Integer> attractorIds = new HashSet<Integer>();
         attractorIds.add(1);
@@ -56,6 +56,18 @@ public class SolverUtilsTest {
         assertTrue(equalSets(testMonotone(1,g),attractorIds));
 
 
+    }
+
+
+
+
+
+    public  static boolean equalSets(Set<Node> attr , List<Integer> ids){
+        if (attr.size()!= ids.size()) return false;
+        for(Node node : attr){
+            if (!ids.contains(node.getId())) return false;
+        }
+        return  true;
     }
 
     public  static boolean equalSets(List<Node> attr , Set<Integer> ids){
@@ -77,14 +89,14 @@ public class SolverUtilsTest {
         Node n = game.getNodes().get(node);
         HashSet<Node> hashSet = new HashSet<Node>();
         hashSet.add(n);
-        return  SolverUtils.generateAttractor(game,hashSet,n.getPriority());
+        return  SolverUtils.generateAttractor(hashSet,n.getPriority());
     }
 
     private  static HashSet<Node> testMonotone( int node , Game game)throws Exception{
         Node n = game.getNodes().get(node);
         HashSet<Node> hashSet = new HashSet<Node>();
         hashSet.add(n);
-        return SolverUtils.generateMonotoneAttractor(game,hashSet,n.getPriority());
+        return SolverUtils.generateMonotoneAttractor(hashSet,n.getPriority());
     }
 
 }

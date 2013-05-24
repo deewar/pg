@@ -2,22 +2,12 @@ package pg.core;
 
 import java.util.*;
 
-public class Game {
+public abstract class Game {
 
     private int parity;
     private final HashMap<Integer, Node> nodes = new HashMap<Integer, Node>(200);
     private final HashSet<Node> winningRegion1 = new HashSet<Node>(100);
     private final HashSet<Node> winningRegion0 = new HashSet<Node>(100);
-    private final ArrayList<Node> sortedNodes = new ArrayList<Node>();
-
-    private static final Comparator<Node> comparator = new Comparator<Node>() {
-        @Override
-        public int compare(Node o1, Node o2) {
-            if (o1.getPriority() < o2.getPriority()) return 1;
-            if (o1.getPriority() == o2.getPriority()) return 0;
-            return -1;
-        }
-    };
 
 
     public HashMap<Integer, Node> getNodes() {
@@ -35,11 +25,6 @@ public class Game {
     }
 
 
-    public ArrayList<Node> getSortedNodes() {
-        return sortedNodes;
-    }
-
-
     public int getParity() {
         return parity;
     }
@@ -47,28 +32,26 @@ public class Game {
     public void setParity(int parity) {
         this.parity = parity;
     }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("game parity: ");
-        sb.append(parity);
+        sb.append(getParity());
         sb.append(";\n");
 
 
-        for (Node n : sortedNodes) {
+        for (Node n : nodes.values()) {
             sb.append(n.toString());
             sb.append("\n");
         }
         return sb.toString();
     }
 
-    public void sortNodes() {
-        Collections.sort(sortedNodes, comparator);
-    }
+    abstract void initialize();
 
     public void deleteNode(Node n) {
-        if (nodes.remove(n.getId()) == null || !sortedNodes.remove(n))
+       //System.out.println("deleting node " + n);
+        if (nodes.remove(n.getId()) == null )
             throw new RuntimeException("node did not exist");
         n.deleteNode();
     }
@@ -81,5 +64,9 @@ public class Game {
         } else {
             throw  new RuntimeException("how did this happen");
         }
+    }
+
+    public void addNode(Node node){
+        nodes.put(node.getId(),node);
     }
 }

@@ -4,16 +4,24 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class Parser {
 
-    public static Game parseGame(String path) throws ParseFailureException{
+    public static  PsolBGame parsePsolBGame(String path) throws  Exception{
+       PsolBGame game = new PsolBGame();
+       parseGame(path,game);
+       return game;
+    }
+    public  static PsolGame parsePsolGame(String path) throws  Exception{
+        PsolGame game = new PsolGame();
+        parseGame(path, game);
+        return game;
+    }
+    private static void parseGame(String path, Game game) throws ParseFailureException{
         int lineNo = 0;
         BufferedReader file = null;
-        Game game = new Game();
         try{
           file = new BufferedReader(new FileReader(path));
           String line = file.readLine();
@@ -21,6 +29,7 @@ public class Parser {
               throw new ParseFailureException("The file does not contain max parity");
           }
           int maxParity = Integer.parseInt(line.split(" ")[1].replace(";",""));
+          if ((maxParity % 2) == 1) maxParity++;
           game.setParity(maxParity);
 
           line = file.readLine().replace(";","");
@@ -28,13 +37,14 @@ public class Parser {
               //System.out.println(line);
               if(!line.isEmpty()){
                 Node node = parseNode(line);
-                game.getNodes().put(node.getId(),node);
-                game.getSortedNodes().add(node);
+                node.setPriority(maxParity   - node.getPriority());
+                game.addNode(node);
+
               }
               line = file.readLine();
               if( line!= null) line = line.replace(";","");
           }
-           game.sortNodes();
+           game.initialize();
            generateSuccessors(game);
            generatePredecessors(game);
         } catch (FileNotFoundException e) {
@@ -50,7 +60,7 @@ public class Parser {
               e.printStackTrace();
           }
         }
-        return  game;
+
     }
 
     private static void generateSuccessors(Game game) {

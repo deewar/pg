@@ -1,23 +1,22 @@
 package pg.solvers;
 
 
-import pg.core.Game;
 import pg.core.Node;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 public class SolverUtils {
 
-    public static HashSet<Node> generateMonotoneAttractor(Game game ,HashSet<Node> nodes, int color ){
-        return generateAttractor(game,nodes,color,true);
+    public static HashSet<Node> generateMonotoneAttractor(Set<Node> nodes, int color){
+        return generateAttractor(nodes,color,true);
     }
 
-    public static HashSet<Node> generateAttractor(Game game , HashSet<Node> nodes , int color) {
-        return generateAttractor(game,nodes,color,false);
+    public static HashSet<Node> generateAttractor(Set<Node> nodes, int color) {
+        return generateAttractor(nodes,color,false);
     }
 
-    private static HashSet<Node> generateAttractor(Game game, HashSet<Node> nodes, int color , boolean coloured) {
+    private static HashSet<Node> generateAttractor(Set<Node> nodes, int color, boolean coloured) {
         HashSet<Node> attractorSet = new HashSet<Node>();
         HashSet<Node> nodesToTest = new HashSet<Node>();
         HashSet<Node> nodesChecked = new HashSet<Node>();
@@ -36,7 +35,7 @@ public class SolverUtils {
         }
 
 
-        boolean attractorSetModified = false;
+        boolean attractorSetModified;
 
         do {
             attractorSetModified = false;
@@ -54,9 +53,9 @@ public class SolverUtils {
                 } else {
                     boolean allLinks = true;
                     for (Node succ : n.getSuccessors()) {
-                        if (!attractorSet.contains(succ)) {
+                        if (!attractorSet.contains(succ) && !nodes.contains(succ)) {
                             //atleast one escape available.try this node later
-                            allLinks = false;
+                             allLinks = false;
                             break;
                         }
                     }
