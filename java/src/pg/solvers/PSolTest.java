@@ -3,6 +3,8 @@ package pg.solvers;
 import org.junit.Test;
 import pg.core.Parser;
 import pg.core.PsolGame;
+import pg.core.ResultParser;
+import pg.core.Results;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -18,6 +20,9 @@ public class PsolTest {
         String path ="games/elevator/elevator.game";
         PsolGame g = Parser.parsePsolGame(path);
         new Psol().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(results.winningRegion0.equals(g.getWinningRegion0()));
+        assertTrue(results.winningRegion1.equals(g.getWinningRegion1()));
         assertTrue(g.getNodes().isEmpty());
 
     }
