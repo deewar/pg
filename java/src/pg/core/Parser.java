@@ -20,7 +20,7 @@ public class Parser {
         return game;
     }
     private static void parseGame(String path, Game game) throws ParseFailureException{
-        int lineNo = 0;
+        int lineNo = 1;
         BufferedReader file = null;
         try{
           file = new BufferedReader(new FileReader(path));
@@ -31,7 +31,7 @@ public class Parser {
           int maxParity = Integer.parseInt(line.split(" ")[1].replace(";",""));
           if ((maxParity % 2) == 1) maxParity++;
           game.setParity(maxParity);
-
+          lineNo++;
           line = file.readLine().replace(";","");
           while (line != null){
               //System.out.println(line);
@@ -41,6 +41,7 @@ public class Parser {
                 game.addNode(node);
 
               }
+              lineNo++;
               line = file.readLine();
               if( line!= null) line = line.replace(";","");
           }
