@@ -3,6 +3,8 @@ package pg.solvers;
 import org.junit.Test;
 import pg.core.Parser;
 import pg.core.PsolBGame;
+import pg.core.ResultParser;
+import pg.core.Results;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -25,6 +27,9 @@ public class PsolBTest {
         String path ="games/jurdzinski/jurdzinski.game";
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
 
     }
@@ -34,6 +39,9 @@ public class PsolBTest {
         String path ="games/ladder/ladder.game";
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
 
     }
@@ -43,6 +51,9 @@ public class PsolBTest {
         String path ="games/modelCheckerLadder/modelCheckerLadder.game";
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
 
     }
@@ -53,7 +64,7 @@ public class PsolBTest {
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
         //recursive ladder game unsolved
-       // assertTrue(g.getNodes().isEmpty());
+        assertTrue(g.getNodes().isEmpty());
 
     }
 
@@ -62,6 +73,9 @@ public class PsolBTest {
         String path ="games/towersOfHanoi/towersOfHanoi.game";
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
     }
 
@@ -82,7 +96,9 @@ public class PsolBTest {
                 169, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199};
         List<Integer> w0 = Arrays.asList(wi0);
         List<Integer> w1 = Arrays.asList(wi1) ;
-
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), w0));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(),w1));
     }
