@@ -7,7 +7,7 @@ import pg.solvers.SolverUtilsTest;
 
 public class Main {
     public static void main (String args[]){
-        if (args.length != 3){
+        if (args.length != 2){
             System.out.println("usage : <solver> <gameFilePath> where solver = \"psol\" \"psolb\" \n The solver expects" +
                     "a result file in the same location as the game file");
         }
@@ -18,7 +18,7 @@ public class Main {
         }else if ("psolb".equals(args[0])){
             ret  = psolB(args[1]);
         }
-        System.out.println(ret);
+        System.out.println("Exec time " +ret);
 
     }
 
