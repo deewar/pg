@@ -9,7 +9,7 @@ public class Main {
     public static void main (String args[]) throws  Exception{
 
         System.out.println("generating game");
-        System.out.println(GameCreator.execute("./jurdzinski" , "3", "5"));
+        System.out.println(GameCreator.execute("jurdzinski" , "3", "5"));
         System.out.println("generated  game");
 
         if (args.length != 2){
