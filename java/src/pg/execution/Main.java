@@ -6,7 +6,12 @@ import pg.solvers.PsolB;
 import pg.solvers.SolverUtilsTest;
 
 public class Main {
-    public static void main (String args[]){
+    public static void main (String args[]) throws  Exception{
+
+        System.out.println("generating game");
+        System.out.println(GameCreator.execute("./jurdzinski" , "3", "5"));
+        System.out.println("generated  game");
+
         if (args.length != 2){
             System.out.println("usage : <solver> <gameFilePath> where solver = \"psol\" \"psolb\" \n The solver expects" +
                     "a result file in the same location as the game file");
