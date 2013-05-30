@@ -1,10 +1,11 @@
-package pg.solvers;
+package pg.solvers.Psol;
 
 import org.junit.Test;
 import pg.core.Parser;
 import pg.core.PsolGame;
 import pg.core.ResultParser;
 import pg.core.Results;
+import pg.solvers.SolverUtilsTest;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,6 +24,19 @@ public class PsolTest {
        /* Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));*/
+        assertTrue(g.getNodes().isEmpty());
+
+    }
+
+
+    @Test
+    public void testJurdzinskiSmall10() throws Exception {
+        String path ="games/jurdzinski/jurdzinski10.game";
+        PsolGame g = Parser.parsePsolGame(path);
+        new Psol().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
 
     }
@@ -85,6 +99,23 @@ public class PsolTest {
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
     }
+
+    @Test
+    public void testClique300() throws Exception {
+        String path ="games/clique/clique3000.game";
+        PsolGame g = Parser.parsePsolGame(path);
+
+        Long startTime = System.nanoTime();
+        new Psol().solve(g);
+        Long endTime = System.nanoTime();
+        Long duration = endTime -startTime;
+        System.out.println(duration);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
+        assertTrue(g.getNodes().isEmpty());
+    }
+
 
     @Test
     public void testCliqueSmall() throws Exception {

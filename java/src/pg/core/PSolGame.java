@@ -11,7 +11,11 @@ public class PsolGame extends Game {
         @Override
         public int compare(Node o1, Node o2) {
             if (o1.getPriority() < o2.getPriority()) return 1;
-            if (o1.getPriority() == o2.getPriority()) return 0;
+            //if (o1.getPriority() == o2.getPriority()) return 0;
+            if (o1.getPriority() == o2.getPriority()){
+                return  Integer.compare(o1.getId(),o2.getId()) *-1;
+            }
+
             return -1;
         }
     };
@@ -37,8 +41,10 @@ public class PsolGame extends Game {
 
     @Override
     public void deleteNode(Node n) {
-        if (!sortedNodes.remove(n))
-            throw new RuntimeException("node did not exist");
+        if (!sortedNodes.remove(n)) {
+            //throw new RuntimeException("node did not exist");
+
+        }
         super.deleteNode(n);
     }
 

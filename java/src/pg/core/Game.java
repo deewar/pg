@@ -51,8 +51,9 @@ public abstract class Game {
 
     public void deleteNode(Node n) {
        //System.out.println("deleting node " + n);
-        if (nodes.remove(n.getId()) == null )
-            throw new RuntimeException("node did not exist");
+        if (nodes.remove(n.getId()) == null )  {
+            //throw new RuntimeException("node did not exist");
+        }
         n.deleteNode();
     }
 

@@ -83,13 +83,15 @@ public class Node {
     }
 
     public void removeFromSuccessors(Node node) {
-        if (!getSuccessors().remove(node))
-            throw new RuntimeException("Tried to remove a node which never existed");
+        if (!getSuccessors().remove(node)) {
+            //throw new RuntimeException("Tried to remove a node which never existed");
+        }
     }
 
     public void removeFromPredecessors(Node node) {
-       if (!getPredecessors().remove(node))
-            throw new RuntimeException("Tried to remove a node which never existed");
+       if (!getPredecessors().remove(node)) {
+            //throw new RuntimeException("Tried to remove a node which never existed");
+       }
     }
 
     @Override

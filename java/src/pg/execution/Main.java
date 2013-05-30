@@ -1,16 +1,31 @@
 package pg.execution;
 
 import pg.core.*;
-import pg.solvers.Psol;
+import pg.solvers.Psol.Psol;
 import pg.solvers.PsolB;
 import pg.solvers.SolverUtilsTest;
+
+import java.io.StringReader;
 
 public class Main {
     public static void main (String args[]) throws  Exception{
 
-        System.out.println("generating game");
-        System.out.println(GameCreator.execute("jurdzinski" , "3", "5"));
-        System.out.println("generated  game");
+/*        System.out.println("calibrating game");
+        System.out.println(GameCreator.calibratePsol("cliquegame"));
+        System.out.println("callibrated");*/
+
+        StringReader gameFile = GameCreator.execute("cliquegame", "3000");
+        System.out.println("game genrated");
+        PsolGame game = Parser.parsePsolGame(gameFile);
+        System.out.println("game parsed");
+
+        long startTime = System.currentTimeMillis();
+        new Psol().solve(game);
+        long endTime = System.currentTimeMillis();
+        long time = endTime - startTime;
+        System.out.println(String.format("game solved in [%d]ms", time));
+
+
 
         if (args.length != 2){
             System.out.println("usage : <solver> <gameFilePath> where solver = \"psol\" \"psolb\" \n The solver expects" +
