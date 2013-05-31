@@ -5,7 +5,7 @@ import pg.core.Parser;
 import pg.core.PsolGame;
 import pg.core.ResultParser;
 import pg.core.Results;
-import pg.solvers.SolverUtilsTest;
+import pg.solvers.solverUtils.SolverUtilsTest;
 
 import java.util.Arrays;
 import java.util.HashSet;

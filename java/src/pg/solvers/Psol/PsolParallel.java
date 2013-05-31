@@ -2,7 +2,7 @@ package pg.solvers.Psol;
 
 import pg.core.Node;
 import pg.core.PsolGame;
-import pg.solvers.SolverUtils;
+import pg.solvers.solverUtils.ParalellUtils;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -118,25 +118,7 @@ public class PsolParallel {
                 }
             }
         }
-        for (Node n : predecessors) {
-            if (n.getSuccessors().isEmpty()) {
-                if ( game.getWinningRegion0().contains(n) || game.getWinningRegion1().contains(n)){
-                    continue;
-                }
-                //System.out.println(n.getId() + " going to " + (1 - n.getOwner()));
-                //with attractors
-                  Set<Node> nod = new HashSet<Node>();
-                    nod.add(n);
-                  nod = SolverUtils.generateAttractor(nod,n.getPriority());
-                  for ( Node k : nod){
-                      game.deleteNode(n);
-                      game.addToWinningRegion(1 - n.getOwner(), n);
-                  }
-                //
-                //game.deleteNode(n);
-                //game.addToWinningRegion(1 - n.getOwner(), n);
-            }
-        }
+        ParalellUtils.handleSuccessorLessNodes(game, predecessors);
         return fatal;
     }
 

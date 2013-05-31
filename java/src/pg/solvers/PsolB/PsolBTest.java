@@ -1,10 +1,11 @@
-package pg.solvers;
+package pg.solvers.PsolB;
 
 import org.junit.Test;
 import pg.core.Parser;
 import pg.core.PsolBGame;
 import pg.core.ResultParser;
 import pg.core.Results;
+import pg.solvers.solverUtils.SolverUtilsTest;
 
 import java.util.Arrays;
 import java.util.HashSet;

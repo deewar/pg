@@ -2,7 +2,7 @@ package pg.solvers.Psol;
 
 import pg.core.Node;
 import pg.core.PsolGame;
-import pg.solvers.SolverUtils;
+import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.HashSet;
 import java.util.Iterator;

@@ -1,7 +1,7 @@
 package pg.solvers.Psol;
 
 import pg.core.Node;
-import pg.solvers.SolverUtils;
+import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.HashSet;
 

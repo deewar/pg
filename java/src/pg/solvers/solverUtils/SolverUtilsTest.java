@@ -1,4 +1,4 @@
-package pg.solvers;
+package pg.solvers.solverUtils;
 
 import org.junit.Test;
 import pg.core.Game;

@@ -1,4 +1,4 @@
-package pg.solvers;
+package pg.solvers.solverUtils;
 
 
 import pg.core.Node;

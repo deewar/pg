@@ -2,8 +2,8 @@ package pg.execution;
 
 import pg.core.*;
 import pg.solvers.Psol.Psol;
-import pg.solvers.PsolB;
-import pg.solvers.SolverUtilsTest;
+import pg.solvers.PsolB.PsolB;
+import pg.solvers.solverUtils.SolverUtilsTest;
 
 import java.io.StringReader;
 

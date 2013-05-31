@@ -45,13 +45,13 @@ public class PsolBGame extends Game {
         if (nodeMap.containsKey(priority)){
             Set<Node> nodes = nodeMap.get(priority);
             if (! nodes.remove(n)){
-                throw new RuntimeException("node did not exist");
+                //throw new RuntimeException("node did not exist");
             }
             if(nodes.isEmpty()){
                 nodeMap.remove(priority);
             }
         }else {
-            throw new RuntimeException("node did not exist" +n);
+            //throw new RuntimeException("node did not exist" +n);
         }
         super.deleteNode(n);
     }
