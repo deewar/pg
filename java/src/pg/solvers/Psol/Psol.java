@@ -20,7 +20,7 @@ public class Psol {
                 //fatal attractor found
 
                 attr = SolverUtils.generateAttractor(attr, k.getPriority());
-                System.out.println("attractor found for node " +k.getId() + "of size " + attr.size());
+                //System.out.println("attractor found for node " +k.getId() + "of size " + attr.size());
                 int player = k.getPriority() % 2;
                 for (Node n : attr) {
                     game.deleteNode(n);

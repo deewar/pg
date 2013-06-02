@@ -21,10 +21,10 @@ public class PsolTest {
         String path ="games/elevator/elevator.game";
         PsolGame g = Parser.parsePsolGame(path);
         new Psol().solve(g);
-       /* Results results= ResultParser.parseResults(path);
-        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
-        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));*/
-        assertTrue(g.getNodes().isEmpty());
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.subSet(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.subSet(g.getWinningRegion0(), results.winningRegion0));
+
 
     }
 

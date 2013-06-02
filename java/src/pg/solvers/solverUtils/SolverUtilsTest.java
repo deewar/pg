@@ -79,7 +79,22 @@ public class SolverUtilsTest {
         return  true;
     }
     public  static boolean equalSets(Set<Node> attr , Set<Integer> ids){
-        if (attr.size()!= ids.size()) return false;
+      /*  Set<Integer> nodeIds = new HashSet<Integer>();
+        for (Node n : attr){
+            nodeIds.add(n.getId());
+        }
+        return  nodeIds.equals(ids);
+*/
+        Set<Integer> oldIds = new HashSet<Integer>(ids);
+        if (attr.size()!= ids.size()) {
+            for ( Node n: attr ){
+                if (!ids.contains(n.getId())){
+                   System.out.println("fake " + n);
+                }
+                ids.remove(n.getId());
+            }
+            return false;
+        }
         for(Node node : attr){
            if (!ids.contains(node.getId())) {
                System.out.println("faulty node  " + node);

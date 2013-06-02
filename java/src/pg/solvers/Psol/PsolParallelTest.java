@@ -1,7 +1,9 @@
 package pg.solvers.Psol;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import pg.core.*;
+import pg.execution.RunUntilFailure;
 import pg.solvers.solverUtils.SolverUtils;
 import pg.solvers.solverUtils.SolverUtilsTest;
 
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
-
+@RunWith(RunUntilFailure.class)
 public class PsolParallelTest {
 
     @Test
@@ -235,7 +237,7 @@ public class PsolParallelTest {
     }
 
 
-    @Test
+    /*@Test
     public void testClique300() throws Exception {
         String path ="games/clique/clique3000.game";
         PsolGame g = Parser.parsePsolGame(path);
@@ -249,7 +251,7 @@ public class PsolParallelTest {
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertTrue(g.getNodes().isEmpty());
     }
-
+*/
 
     @Test
     public void testCliqueSmall() throws Exception {
