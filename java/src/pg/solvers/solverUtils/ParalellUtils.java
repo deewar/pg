@@ -44,7 +44,7 @@ public class ParalellUtils {
             if (!atleastOneSuccessor) {
                 // this node has been abandoned.. add to winning region
                 nodes.add(n);
-                /*if (n.Mark()) {
+                /*if (n.mark()) {
                     System.out.println("found childless " + n + " for " + node);
                     int player = 1 - n.getOwner();
                     if (player == 0) {

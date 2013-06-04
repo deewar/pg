@@ -1,15 +1,11 @@
 package pg.solvers.Psol;
 
-import pg.core.Game;
 import pg.core.Node;
 import pg.core.PsolGame;
-import pg.solvers.solverUtils.MarkingSolverUtils;
-import pg.solvers.solverUtils.ParalellUtils;
 import pg.solvers.solverUtils.Round;
 import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class MarkingSolverThread extends Thread {
@@ -35,11 +31,11 @@ public class MarkingSolverThread extends Thread {
             //System.out.println("Processing " + node.getId() );
             nodes.clear();
             nodes.add(node);
-            attractor = MarkingSolverUtils.generateMonotoneAttractor(nodes, node.getPriority());
+            attractor = SolverUtils.generateMonotoneAttractor(nodes, node.getPriority());
             if (attractor.contains(node)) {
 
                 //System.out.println("attractor  found for node " + node.getId() );
-                attractor = MarkingSolverUtils.generateAttractor(attractor, node.getPriority());
+                attractor = SolverUtils.generateAttractor(attractor, node.getPriority());
                 handleAttractor(attractor, node, game);
                 markingPsolParallel.restartComputation(round.round);
             } else {
@@ -61,6 +57,7 @@ public class MarkingSolverThread extends Thread {
 
             node = markingPsolParallel.getNextNode(game, round);
         }
+        //markingPsolParallel.dyingThread();
 
     }
 
@@ -77,18 +74,18 @@ public class MarkingSolverThread extends Thread {
                     predecessors.add(pred);
                 }
             }*/
-            if (n.Mark()){
+            if (n.mark()){
                 wonNodes.add(n);
             } else{
-                System.out.println("node " +node.getId()+ " lost  "+ n.getId());
+                //System.out.println("node " +node.getId()+ " lost  "+ n.getId());
             }
 
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("node " +node.getId()+ " won " ) ;
+        //StringBuilder sb = new StringBuilder();
+        //sb.append("node " +node.getId()+ " won " ) ;
 
         for (Node n : wonNodes) {
-            sb.append(n.getId() +  " ,");
+            //sb.append(n.getId() + " ,");
             if ( player == 0 ){
                 HashSet<Node> winningRegion0 = game.getWinningRegion0();
                 synchronized (winningRegion0) {
@@ -106,7 +103,8 @@ public class MarkingSolverThread extends Thread {
             }
         }
 
-        System.out.println(sb.toString());
+
+        //System.out.println(sb.toString());
 
         /*for( Node n :ParalellUtils.handleSuccessorLessNodesByMarking(game, predecessors )){
             markingPsolParallel.depositNodeForRetest(n);

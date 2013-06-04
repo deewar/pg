@@ -138,7 +138,7 @@ public class Node {
 
     }
 
-    public boolean Mark() {
+    public boolean mark() {
         markingLock.writeLock().lock();
         boolean  ret = !this.isMarked();
         this.marked = true;

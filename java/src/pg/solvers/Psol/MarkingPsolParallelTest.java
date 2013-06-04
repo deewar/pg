@@ -16,13 +16,13 @@ import java.util.Set;
 import static junit.framework.Assert.assertTrue;
 
 
-//@RunWith(RunUntilFailure.class)
+@RunWith(RunUntilFailure.class)
 
 public class MarkingPsolParallelTest  {
 
 
 
-    int nThreads = 4;
+    int nThreads = 8;
 
     @Test
     public void testElevatorSmall() throws Exception {
@@ -60,6 +60,7 @@ public class MarkingPsolParallelTest  {
         PsolGame g = Parser.parsePsolGame(path);
         new MarkingPsolParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
+        System.out.println("assertions");
         assertAllNodesMarked(g);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -74,9 +75,10 @@ public class MarkingPsolParallelTest  {
         PsolGame g = Parser.parsePsolGame(path);
         new MarkingPsolParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
+        assertAllNodesMarked(g);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
-        assertAllNodesMarked(g);
+
 
     }
 
@@ -218,14 +220,14 @@ public class MarkingPsolParallelTest  {
         assertAllNodesMarked(g);
     }
 
-    @Test
+   /* @Test
     public void testClique5000() throws Exception {
        for(int i = 0; i< 50000; i++){
            System.out.println(i);
            testClique5();
        }
 
-    }
+    }*/
 
     @Test
     public void testClique5() throws Exception {
