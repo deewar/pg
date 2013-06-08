@@ -14,6 +14,8 @@ public class MarkingSolverThread extends Thread {
     Round round = new Round();
     private MarkingPsolParallel markingPsolParallel;
 
+    public Set<Node> winningRegion0 = new HashSet<Node>();
+    public Set<Node> winningRegion1 = new HashSet<Node>();
 
     public MarkingSolverThread(PsolGame game, MarkingPsolParallel markingPsolParallel) {
         this.game = game;
@@ -87,18 +89,24 @@ public class MarkingSolverThread extends Thread {
         for (Node n : wonNodes) {
             //sb.append(n.getId() + " ,");
             if ( player == 0 ){
-                HashSet<Node> winningRegion0 = game.getWinningRegion0();
-                synchronized (winningRegion0) {
+               // HashSet<Node> winningRegion0 = game.getWinningRegion0();
+              /*  synchronized (winningRegion0) {
                     if (!winningRegion0.contains(n)){
                         winningRegion0.add(n);
                     }
+                }*/
+                if(!winningRegion0.contains(n)){
+                    winningRegion0.add(n);
                 }
             } else{
-                HashSet<Node> winningRegion1 = game.getWinningRegion1();
+               /* HashSet<Node> winningRegion1 = game.getWinningRegion1();
                 synchronized (winningRegion1) {
                     if (!winningRegion1.contains(n)){
                         winningRegion1.add(n);
                     }
+                }*/
+                if ( !winningRegion1.contains(n)){
+                    winningRegion1.add(n);
                 }
             }
         }

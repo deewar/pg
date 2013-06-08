@@ -1,25 +1,21 @@
-package pg.solvers.Psol;
+package pg.solvers.PsolB;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import pg.core.*;
+
 import pg.execution.RunUntilFailure;
-import pg.solvers.solverUtils.SolverUtils;
 import pg.solvers.solverUtils.SolverUtilsTest;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static junit.framework.Assert.assertTrue;
 
+//@RunWith(RunUntilFailure.class)
 
-@RunWith(RunUntilFailure.class)
-
-public class MarkingPsolParallelTest  {
-
+public class MarkingPsoBParallelTest {
 
 
     int nThreads = 8;
@@ -27,8 +23,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testElevatorSmall() throws Exception {
         String path ="games/elevator/elevator.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.subSet(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.subSet(g.getWinningRegion0(), results.winningRegion0));
@@ -36,10 +32,10 @@ public class MarkingPsolParallelTest  {
 
     }
 
-    private void assertAllNodesMarked(PsolGame g) {
+    private void assertAllNodesMarked(Game g) {
         boolean broken = false;
 
-        for(Node n: g.getSortedNodes()){
+        for(Node n: g.getNodes().values()){
             if( !n.isMarked())  {
                 System.out.println("broken "+ n);
                 broken = true;
@@ -47,8 +43,8 @@ public class MarkingPsolParallelTest  {
         }
         assertTrue(!broken);
     }
-    private void assertAllNodesNotMarked(PsolGame g) {
-        for(Node n: g.getSortedNodes()){
+    private void assertAllNodesNotMarked(Game g) {
+        for(Node n: g.getNodes().values()){
             assertTrue(!n.isMarked());
         }
     }
@@ -57,8 +53,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testJurdzinskiSmall1() throws Exception {
         String path ="games/jurdzinski/jurdzinski1.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         System.out.println("assertions");
         assertAllNodesMarked(g);
@@ -72,8 +68,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testJurdzinskiSmall10() throws Exception {
         String path ="games/jurdzinski/jurdzinski10.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertAllNodesMarked(g);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
@@ -87,8 +83,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testJurdzinskiSmall() throws Exception {
         String path ="games/jurdzinski/jurdzinski.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertAllNodesMarked(g);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
@@ -98,8 +94,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testLadderSmall() throws Exception {
         String path ="games/ladder/ladder.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertAllNodesMarked(g);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
@@ -110,8 +106,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testModelCheckerLadderSmall() throws Exception {
         String path ="games/modelCheckerLadder/modelCheckerLadder.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -123,8 +119,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall10() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder10.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         /*Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));*/
@@ -135,8 +131,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall3() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder3.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -147,8 +143,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall5() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder5.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -161,8 +157,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall4() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder4.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -174,8 +170,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall2() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder2.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -186,8 +182,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall1() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder1.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -199,8 +195,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testRecursiveLadderSmall() throws Exception {
         String path ="games/recursiveLadder/recursiveLadder.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         /* Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));*/
@@ -211,8 +207,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testTowersOfHanoiSmall() throws Exception {
         String path ="games/towersOfHanoi/towersOfHanoi.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         boolean  b = SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0);
@@ -220,7 +216,7 @@ public class MarkingPsolParallelTest  {
         assertAllNodesMarked(g);
     }
 
-   /* @Test
+    /* @Test
     public void testClique5000() throws Exception {
        for(int i = 0; i< 50000; i++){
            System.out.println(i);
@@ -232,8 +228,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testClique5() throws Exception {
         String path ="games/clique/clique5.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -244,8 +240,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testClique3() throws Exception {
         String path ="games/clique/clique3.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
@@ -255,22 +251,21 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testClique10() throws Exception {
         String path ="games/clique/clique10.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Results results= ResultParser.parseResults(path);
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertAllNodesMarked(g);
     }
 
-/*
 
     @Test
     public void testClique300() throws Exception {
         String path ="games/clique/clique3000.game";
-        PsolGame g = Parser.parsePsolGame(path);
+        PsolBGame g = Parser.parsePsolBGame(path);
         Long startTime = System.nanoTime();
-        new MarkingPsolParallel(nThreads).solve(g);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Long endTime = System.nanoTime();
         Long duration = endTime -startTime;
         System.out.println(duration);
@@ -279,14 +274,13 @@ public class MarkingPsolParallelTest  {
         assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
         assertAllNodesMarked(g);
     }
-*/
 
 
     @Test
     public void testCliqueSmall() throws Exception {
         String path ="games/clique/clique.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         Integer[] wi0 = {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50,
                 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
                 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140,
@@ -311,8 +305,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testSolveBasic() throws Exception {
         String path ="games/game.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         HashSet<Integer> w0 = new HashSet<Integer>();
         HashSet<Integer> w1 = new HashSet<Integer>();
         w0.add(2);
@@ -330,8 +324,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testSolvePapersFatalAttractorsPresentation1() throws Exception {
         String path ="games/papers/fatal_attractors_presentation1.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         HashSet<Integer> w0 = new HashSet<Integer>();
         HashSet<Integer> w1 = new HashSet<Integer>();
         w1.add(0);
@@ -353,8 +347,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testSolvePapersFatalAttractors2() throws Exception {
         String path ="games/papers/fatal_attractors2.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         HashSet<Integer> w0 = new HashSet<Integer>();
         HashSet<Integer> w1 = new HashSet<Integer>();
 
@@ -366,8 +360,8 @@ public class MarkingPsolParallelTest  {
     @Test
     public void testSolvePapersFatalAttractors1() throws Exception {
         String path ="games/papers/fatal_attractors1.game";
-        PsolGame g = Parser.parsePsolGame(path);
-        new MarkingPsolParallel(nThreads).solve(g);
+        PsolBGame g = Parser.parsePsolBGame(path);
+        new MarkingPsoBParallel(nThreads).solve(g);
         HashSet<Integer> w0 = new HashSet<Integer>();
         HashSet<Integer> w1 = new HashSet<Integer>();
         w0.add(0);

@@ -12,7 +12,7 @@ public class Node {
     private int owner;
     private String Name;
     private volatile boolean marked;
-    public ReentrantReadWriteLock markingLock = new ReentrantReadWriteLock();
+    //public ReentrantReadWriteLock markingLock = new ReentrantReadWriteLock();
     private HashSet<Integer> successorsIds = new HashSet<Integer>();
     private HashSet<Node> successors = new HashSet<Node>();
     private HashSet<Node> predecessors = new HashSet<Node>();
@@ -131,18 +131,18 @@ public class Node {
 
     public boolean isMarked() {
         boolean tmp;
-        markingLock.readLock().lock();
+        //markingLock.readLock().lock();
         tmp = marked;
-        markingLock.readLock().unlock();
+        //markingLock.readLock().unlock();
         return tmp;
 
     }
 
     public boolean mark() {
-        markingLock.writeLock().lock();
+        //markingLock.writeLock().lock();
         boolean  ret = !this.isMarked();
         this.marked = true;
-        markingLock.writeLock().unlock();
+        //markingLock.writeLock().unlock();
         return ret;
     }
 

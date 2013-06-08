@@ -50,7 +50,7 @@ public class MarkingPsolParallel {
         this.round++;
 
 
-      /*  for (int i = 0; i < deadThreads; i++) {
+        /*  for (int i = 0; i < deadThreads; i++) {
             Thread t = new MarkingSolverThread(game, this);
             newThreads.add(t);
         }*/
@@ -70,7 +70,20 @@ public class MarkingPsolParallel {
             markingSolverThreads[i].join();
         }
 
-      /*  while (!newThreads.isEmpty()) {
+
+        Set<Node> winningRegion0 = game.getWinningRegion0();
+        Set<Node> winningRegion1 = game.getWinningRegion1();
+
+        for (MarkingSolverThread t : markingSolverThreads) {
+            for (Node n : t.winningRegion0) {
+                winningRegion0.add(n);
+            }
+            for (Node n : t.winningRegion1) {
+                winningRegion1.add(n);
+            }
+
+        }
+        /*  while (!newThreads.isEmpty()) {
             newThreads.get(0).join();
         }*/
 
@@ -89,19 +102,17 @@ public class MarkingPsolParallel {
                     //System.out.println("found childless " + n);
                     int player = 1 - n.getOwner();
                     if (player == 0) {
-                        HashSet<Node> winningRegion0 = game.getWinningRegion0();
-                        synchronized (winningRegion0) {
-                            if (!winningRegion0.contains(n)) {
-                                winningRegion0.add(n);
-                            }
+
+                        if (!winningRegion0.contains(n)) {
+                            winningRegion0.add(n);
                         }
+
                     } else {
-                        HashSet<Node> winningRegion1 = game.getWinningRegion1();
-                        synchronized (winningRegion1) {
-                            if (!winningRegion1.contains(n)) {
-                                winningRegion1.add(n);
-                            }
+
+                        if (!winningRegion1.contains(n)) {
+                            winningRegion1.add(n);
                         }
+
                     }
                 }
             }
@@ -112,7 +123,7 @@ public class MarkingPsolParallel {
     }
 
 
-    public void psolve(PsolGame game) {
+    public static void psolve(PsolGame game) {
 
         HashSet<Node> nodes = new HashSet<Node>();
         for (Node k : game.getSortedNodes()) {
@@ -129,7 +140,7 @@ public class MarkingPsolParallel {
                     n.mark();
                     game.addToWinningRegion(player, n);
                 }
-                this.psolve(game);
+                psolve(game);
                 return;
             }
 
