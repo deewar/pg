@@ -1,25 +1,29 @@
 package pg.core;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ResultParser {
 
-
     public static Results parseResults(String path) throws ParseFailureException {
-        path = path+".result";
-        int lineNo = 1;
-        BufferedReader file = null;
-        Results results = new Results();
+        path = path + ".result";
 
         try {
-            file = new BufferedReader(new FileReader(path));
+            return parseResults(new FileReader(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new ParseFailureException("could not open the file [" + path + "]");
+        }
+    }
+
+    public static Results parseResults(Reader reader) throws ParseFailureException {
+        Results results = new Results();
+        int lineNo = 1;
+        BufferedReader file = new BufferedReader(reader);
+        try {
             String line = file.readLine();
             if (!line.contains("paritysol")) {
                 throw new ParseFailureException("The file does not contain max parity");
@@ -49,9 +53,6 @@ public class ResultParser {
             }
 
             return results;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new ParseFailureException("could not open the file [" + path + "]");
         } catch (IOException e) {
             e.printStackTrace();
             throw new ParseFailureException("Failed to read line [" + lineNo + "]");
@@ -64,4 +65,6 @@ public class ResultParser {
         }
 
     }
+
+
 }

@@ -18,7 +18,7 @@ public class Psol {
             HashSet<Node> attr = SolverUtils.generateMonotoneAttractor(nodes, k.getPriority());
             if (attr.contains(k)) {
                 //fatal attractor found
-
+                game.incrementFatalAttractorCount();
                 attr = SolverUtils.generateAttractor(attr, k.getPriority());
                 //System.out.println("attractor found for node " +k.getId() + "of size " + attr.size());
                 int player = k.getPriority() % 2;

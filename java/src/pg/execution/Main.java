@@ -1,89 +1,203 @@
 package pg.execution;
 
+import org.apache.commons.io.FileUtils;
 import pg.core.*;
-import pg.solvers.Psol.Psol;
-import pg.solvers.PsolB.PsolB;
+import pg.execution.psolBExecutors.MarkingPsolBExecutor;
+import pg.execution.psolBExecutors.PsolBParallelExecutor;
+import pg.execution.psolBExecutors.PsolBSerialExecutor;
+import pg.execution.psolExecutors.MarkingPsolParallelExecuter;
+import pg.execution.psolExecutors.PsolParallelExecuter;
+import pg.execution.psolExecutors.PsolSerialExecuter;
 import pg.solvers.solverUtils.SolverUtilsTest;
 
+import java.io.File;
 import java.io.StringReader;
 
 public class Main {
-    public static void main (String args[]) throws  Exception{
+    public static void main(String args[]) throws Exception {
 
-/*        System.out.println("calibrating game");
-        System.out.println(GameCreator.calibratePsol("cliquegame"));
-        System.out.println("callibrated");*/
-
-        StringReader gameFile = GameCreator.execute("cliquegame", "3000");
-        System.out.println("game genrated");
-        PsolGame game = Parser.parsePsolGame(gameFile);
-        System.out.println("game parsed");
-
-        long startTime = System.currentTimeMillis();
-        new Psol().solve(game);
-        long endTime = System.currentTimeMillis();
-        long time = endTime - startTime;
-        System.out.println(String.format("game solved in [%d]ms", time));
-
-
-
-        if (args.length != 2){
-            System.out.println("usage : <solver> <gameFilePath> where solver = \"psol\" \"psolb\" \n The solver expects" +
-                    "a result file in the same location as the game file");
+        if (args.length < 1) {
+            printUsage();
+            return;
         }
 
-        long ret =  -1;
-        if ("psol".equals(args[0])){
-            ret = psol(args[1]);
-        }else if ("psolb".equals(args[0])){
-            ret  = psolB(args[1]);
-        }
-        System.out.println("Exec time " +ret);
 
-    }
-
-    private static long psolB(String arg) {
-        try{
-            PsolBGame game = Parser.parsePsolBGame(arg);
-            PsolB psolB = new PsolB();
-            Long startTime = System.currentTimeMillis();
-            psolB.solve(game);
-            Long endTime = System.currentTimeMillis();
-            long solveTime = endTime-startTime;
-            if (!validateGame(arg,game)){
-                throw  new RuntimeException("results not valid");
+        switch (args[0].toLowerCase()) {
+            case "clique": {
+                handleSingleParameters("cliquegame", 12);
+                break;
             }
-            return  solveTime;
-        }   catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    private static long psol(String arg) {
-        try{
-            PsolGame game = Parser.parsePsolGame(arg);
-            Psol psol = new Psol();
-            Long startTime = System.currentTimeMillis();
-            psol.solve(game);
-            Long endTime = System.currentTimeMillis();
-            long solveTime = endTime-startTime;
-            if (!validateGame(arg,game)){
-                throw  new RuntimeException("results not valid");
+            case "ladder": {
+                handleSingleParameters("laddergame", 5);
+                break;
             }
-            return  solveTime;
-        }   catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            case "recursive": {
+                handleSingleParameters("recursiveladder", 5);
+                break;
+            }
+            case "model": {
+                handleSingleParameters("modelcheckerladder", 5);
+                break;
+            }
+            case "tower": {
+                handleSingleParameters("towersofhanoi", 5);
+                break;
+            }
+            case "jurdzinski": {
+                handleJurdzinski("jurdzinskigame");
+                break;
+            }
+            case "random": {
+                handleRandom("jurdzinskigame");
+                break;
+            }
+
+
         }
-        return -1;
+
+
     }
 
-    private static boolean validateGame(String arg, Game game)  throws Exception{
-       Results results = ResultParser.parseResults(arg);
-       return SolverUtilsTest.equalSets(game.getWinningRegion0(),results.winningRegion0) &&
-              SolverUtilsTest.equalSets(game.getWinningRegion1(),results.winningRegion1);
+    private static void handleRandom(String game) {
+
     }
 
+    private static void handleJurdzinski(String gameName) throws Exception {
+        System.out.println("Runnin n 10");
+        int size = 1;
+        for (int i = 1; i <= 5/*11*/ ; i++) {
+            size = size * 2;
+            System.out.println("performing benchmark for size " + size);
+            String game = GameCreator.execute(gameName, "" + size, "" + 10).toString();
+            String filename = gameName + System.currentTimeMillis();
+            File file = new File(filename);
+            FileUtils.writeStringToFile(file, game);
+            String result = GameCreator.execute("pgsolver", "-global", "recursive", "--printsolonly", filename).toString();
+            //System.out.println(result);
+            file.delete();
+            Results results = ResultParser.parseResults(new StringReader(result));
+            runAllSolvers(game, results);
+            System.gc();
+        }
+
+
+        System.out.println("Runnin 10 n");
+        size = 1;
+        for (int i = 1; i <= 5/*11*/ ; i++) {
+            size = size * 2;
+            System.out.println("performing benchmark for size " + size);
+            String game = GameCreator.execute(gameName, "" + 10, "" + size).toString();
+            String filename = gameName + System.currentTimeMillis();
+            File file = new File(filename);
+            FileUtils.writeStringToFile(file, game);
+            String result = GameCreator.execute("pgsolver", "-global", "recursive", "--printsolonly", filename).toString();
+            //System.out.println(result);
+            file.delete();
+            Results results = ResultParser.parseResults(new StringReader(result));
+            runAllSolvers(game, results);
+            System.gc();
+        }
+
+        System.out.println("Runnin n n");
+        size = 1;
+        for (int i = 1; i <= 2/*7 */; i++) {
+            size = size * 2;
+            System.out.println("performing benchmark for size " + size);
+            String game = GameCreator.execute(gameName, "" + size, "" + size).toString();
+            String filename = gameName + System.currentTimeMillis();
+            File file = new File(filename);
+            FileUtils.writeStringToFile(file, game);
+            String result = GameCreator.execute("pgsolver", "-global", "recursive", "--printsolonly", filename).toString();
+            //System.out.println(result);
+            file.delete();
+            Results results = ResultParser.parseResults(new StringReader(result));
+            runAllSolvers(game, results);
+            System.gc();
+        }
+
+    }
+
+    private static void printUsage() {
+        System.out.println("usage : java -jar game.jar <NAME OF GAME> where possible games are clique,ladder,recursive" +
+                ",model,tower,jurdzinski,random.");
+    }
+
+    private static void handleSingleParameters(String gameName, int maxRounds) throws Exception {
+        int size = 1;
+        for (int i = 1; i <= maxRounds; i++) {
+            size = size * 2;
+            System.out.println("performing benchmark for size " + size );
+            System.out.println("---------------------------------------------\n");
+            String game = GameCreator.execute(gameName, "" + size).toString();
+            String filename = gameName + System.currentTimeMillis();
+            File file = new File(filename);
+            FileUtils.writeStringToFile(file, game);
+            String result = GameCreator.execute("pgsolver", "-global", "recursive", "--printsolonly", filename).toString();
+            //System.out.println(result);
+            file.delete();
+            Results results = ResultParser.parseResults(new StringReader(result));
+            runAllSolvers(game, results);
+            System.gc();
+        }
+    }
+
+    private static void runAllSolvers(String game, Results results) throws Exception {
+        System.out.println("Running Psol Bench Mark");
+        System.out.println(benchmark(new PsolSerialExecuter(game), results));
+        int nthreads = 1;
+        for (int i = 0; i <= 5; i++) {
+            nthreads = (int) Math.pow(2, i);
+            System.out.println("Running PsolParallel " + nthreads + " Bench Mark");
+            System.out.println(benchmark(new PsolParallelExecuter(game, nthreads), results));
+        }
+        for (int i = 1; i <= 5; i++) {
+            nthreads = (int) Math.pow(2, i);
+            System.out.println("Running MarkingPsolParallel " + nthreads + " Bench Mark");
+            System.out.println(benchmark(new MarkingPsolParallelExecuter(game, nthreads), results));
+        }
+
+        System.out.println("Running PsolB Bench Mark");
+        System.out.println(benchmark(new PsolBSerialExecutor(game), results));
+
+        for (int i = 1; i <= 5; i++) {
+            nthreads = (int) Math.pow(2, i);
+            System.out.println("Running PsolBParallel " + nthreads + " Bench Mark");
+            System.out.println(benchmark(new PsolBParallelExecutor(game, nthreads), results));
+        }
+        for (int i = 1; i <= 5; i++) {
+            nthreads = (int) Math.pow(2, i);
+            System.out.println("Running MarkingPsolBParallel " + nthreads + " Bench Mark");
+            System.out.println(benchmark(new MarkingPsolBExecutor(game, nthreads), results));
+        }
+
+
+    }
+
+
+    private static boolean validateGame(Results results, Game game) throws Exception {
+
+        return SolverUtilsTest.equalSets(game.getWinningRegion0(), results.winningRegion0) &&
+                SolverUtilsTest.equalSets(game.getWinningRegion1(), results.winningRegion1);
+    }
+
+    private static ExecutionResult benchmark(IExecutable executable, Results results) throws Exception {
+        ExecutionResult result = new ExecutionResult();
+
+        for (int i = 0; i < 5; i++) {
+            executable.solve(result);
+            executable.resetGame();
+        }
+        System.gc();
+
+        for (int i = 0; i < 5; i++) {
+            long startTime = System.nanoTime();
+            executable.solve(result);
+            long endTime = System.nanoTime();
+            result.runTime += endTime - startTime;
+            result.validSolution = result.validSolution && validateGame(results, result.game);
+            System.gc();
+        }
+        result.runTime = result.runTime / 5;
+        return result;
+    }
 }

@@ -90,6 +90,7 @@ public class PsolParallel {
                 //System.out.println("attractor found for node " + node.getId() + " of size " + attractor.size());
                 //fatal attractor
                 fatal = true;
+                game.incrementFatalAttractorCount();
                 int player = node.getPriority() % 2;
                 for (Node n : attractor) {
                     for (Node pred : n.getPredecessors()) {

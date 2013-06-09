@@ -11,11 +11,11 @@ import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.*;
 
-public class MarkingPsoBParallel {
+public class MarkingPsolBParallel {
 
     private int nThreads;
 
-    public MarkingPsoBParallel(int nThreads) {
+    public MarkingPsolBParallel(int nThreads) {
         this.nThreads = nThreads;
     }
 
@@ -26,6 +26,7 @@ public class MarkingPsoBParallel {
     Set<Integer> coloursCompleted;
     List<Integer> colours;
     HashMap<Integer,Integer> colourRound = new HashMap<Integer, Integer>();
+
     synchronized public Set<Node> getNextNodes(PsolBGame game, Round round) {
         round.round = this.round;
         if (game.getNodes().isEmpty()) return null;
@@ -106,6 +107,7 @@ public class MarkingPsoBParallel {
         Set<Node> winningRegion0 = game.getWinningRegion0();
         Set<Node> winningRegion1 = game.getWinningRegion1();
         for (MarkingSolverThread t : markingSolverThreads) {
+            game.incrementFatalAttractorCount(t.attractorsFound);
             for (Node n : t.winningRegion0) {
                 winningRegion0.add(n);
             }

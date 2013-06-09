@@ -1,6 +1,7 @@
 package pg.core;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Game {
 
@@ -8,13 +9,21 @@ public abstract class Game {
     private final HashMap<Integer, Node> nodes = new HashMap<Integer, Node>(200);
     private final HashSet<Node> winningRegion1 = new HashSet<Node>(100);
     private final HashSet<Node> winningRegion0 = new HashSet<Node>(100);
-
+    private AtomicInteger noOfFatalAttractors = new AtomicInteger(0);
 
     public HashMap<Integer, Node> getNodes() {
         return nodes;
     }
 
-
+    public int getNoOfFatalAttractors(){
+        return noOfFatalAttractors.intValue();
+    }
+    public  void  incrementFatalAttractorCount(){
+        noOfFatalAttractors.incrementAndGet();
+    }
+    public  void  incrementFatalAttractorCount(int count){
+        noOfFatalAttractors.addAndGet(count);
+    }
     public HashSet<Node> getWinningRegion1() {
         return winningRegion1;
     }

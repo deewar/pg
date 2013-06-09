@@ -72,6 +72,7 @@ public class PsolBParallel {
         boolean attractorFound = false;
         for (SolverThread t : threads) {
             if (t != null && t.attractorFound) {
+                game.incrementFatalAttractorCount();
                 attractorFound = true;
                 int player = t.color % 2;
                 for (Node n : t.attractor) {

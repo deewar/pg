@@ -24,6 +24,7 @@ public class PsolB {
                 cache.addAll(nodes);
                 Set<Node> monotone = SolverUtils.generateMonotoneAttractor(nodes, color);
                 if(monotone.containsAll(nodes)) {
+                    game.incrementFatalAttractorCount();
                     Set<Node> attr = SolverUtils.generateAttractor(monotone, color);
                     int player = color % 2;
                     for (Node n : attr) {

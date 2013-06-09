@@ -24,7 +24,8 @@ public class GameCreator {
         double round = 2;
         long time = 0;
         while (time < timeout) {
-            StringReader gameFile = execute(gameName, "" + decimalFormat.format(round));
+            ByteArrayOutputStream byteArrayOutputStream =    execute(gameName, "" + decimalFormat.format(round));
+            StringReader gameFile = new StringReader(byteArrayOutputStream.toString());
             System.out.println("game genrated");
             PsolGame game = Parser.parsePsolGame(gameFile);
             System.out.println("game parsed");
@@ -44,13 +45,13 @@ public class GameCreator {
     }
 
 
-    public static StringReader execute(String command, String... args) throws IOException {
+    public static ByteArrayOutputStream execute(String command, String... args) throws IOException {
         //
         // ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         CommandLine commandline = CommandLine.parse(command);
         for (String i : args) {
-            System.out.println("argument[" + i + "]");
+            //System.out.println("argument[" + i + "]");
             commandline.addArgument(i);
         }
         DefaultExecutor exec = new DefaultExecutor();
@@ -58,8 +59,8 @@ public class GameCreator {
         PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
         exec.setStreamHandler(streamHandler);
         exec.execute(commandline);
-        StringReader stringReader = new StringReader(outputStream.toString());
-        return (stringReader);
+
+        return outputStream;
     }
 
 }

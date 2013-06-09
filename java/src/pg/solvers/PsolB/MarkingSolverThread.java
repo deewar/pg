@@ -9,23 +9,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MarkingSolverThread extends Thread {
-
-    private MarkingPsoBParallel markingPsoBParallel;
+    public  int attractorsFound = 0;
+    private MarkingPsolBParallel markingPsolBParallel;
     private Round round = new Round();
     private PsolBGame psolBGame;
 
     public Set<Node> winningRegion0 = new HashSet<Node>();
     public Set<Node> winningRegion1 = new HashSet<Node>();
 
-    public MarkingSolverThread(MarkingPsoBParallel markingPsoBParallel, PsolBGame psolBGame) {
+    public MarkingSolverThread(MarkingPsolBParallel markingPsolBParallel, PsolBGame psolBGame) {
 
-        this.markingPsoBParallel = markingPsoBParallel;
+        this.markingPsolBParallel = markingPsolBParallel;
         this.psolBGame = psolBGame;
     }
 
     @Override
     public void run() {
-        Set<Node> nodes = markingPsoBParallel.getNextNodes(psolBGame, round);
+        Set<Node> nodes = markingPsolBParallel.getNextNodes(psolBGame, round);
         Set<Node> cache = new HashSet<Node>();
         Set<Node> nodesCopy = new HashSet<Node>();
         while (nodes != null) {
@@ -34,9 +34,9 @@ public class MarkingSolverThread extends Thread {
                 cache.addAll(nodesCopy);
                 Set<Node> monotone = SolverUtils.generateMonotoneAttractor(nodesCopy, round.colour);
                 if (monotone.containsAll(nodesCopy)) {
+                    attractorsFound++;
                     Set<Node> attr = SolverUtils.generateAttractor(monotone, round.colour);
                     int player = round.colour % 2;
-                    StringBuilder sb = new StringBuilder();
 
                     boolean allMarked = true;
                     for (Node n : attr) {
@@ -56,7 +56,7 @@ public class MarkingSolverThread extends Thread {
                          break;
                     }else {
                         //System.out.println("requesting restart of computation");
-                        markingPsoBParallel.restartComputation(round.round);
+                        markingPsolBParallel.restartComputation(round.round);
                         break;
                     }
 
@@ -66,7 +66,7 @@ public class MarkingSolverThread extends Thread {
             }
             nodesCopy.clear();
             cache.clear();
-            nodes = markingPsoBParallel.getNextNodes(psolBGame, round);
+            nodes = markingPsolBParallel.getNextNodes(psolBGame, round);
         }
     }
 }

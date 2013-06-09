@@ -75,6 +75,7 @@ public class MarkingPsolParallel {
         Set<Node> winningRegion1 = game.getWinningRegion1();
 
         for (MarkingSolverThread t : markingSolverThreads) {
+            game.incrementFatalAttractorCount(t.attractosFound);
             for (Node n : t.winningRegion0) {
                 winningRegion0.add(n);
             }
