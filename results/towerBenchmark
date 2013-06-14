@@ -1,0 +1,272 @@
+Warmup Started
+warmup complete
+performing benchmark for size 2
+---------------------------------------------
+
+Running Psol Bench Mark
+BENCHMARK Results
+RunTime 789806	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 815002	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 800896	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 857795	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 1798811	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 1038512	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 1479717	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 798489	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 1021526	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 1280621	Number of FatalAttractors 9	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 1759287	Number of FatalAttractors 13	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 2210085	Number of FatalAttractors 12	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 3575668	Number of FatalAttractors 11	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolB Bench Mark
+BENCHMARK Results
+RunTime 740662	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 588469	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 622324	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 678550	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 619853	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 579011	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 581561	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 824821	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 953685	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 1255846	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 1574583	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 2758365	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 4326087	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+performing benchmark for size 4
+---------------------------------------------
+
+Running Psol Bench Mark
+BENCHMARK Results
+RunTime 985809	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 7562027	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 4272543	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 4953935	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 5246517	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 8390427	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 11484584	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 1942383	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 1504921	Number of FatalAttractors 81	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 1216969	Number of FatalAttractors 102	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 1948826	Number of FatalAttractors 105	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 3419142	Number of FatalAttractors 100	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 6253409	Number of FatalAttractors 112	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolB Bench Mark
+BENCHMARK Results
+RunTime 744496	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 1038502	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 1301234	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 1280815	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 1332065	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 1521073	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running PsolBParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 1313389	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 1 Bench Mark
+BENCHMARK Results
+RunTime 1524496	Number of FatalAttractors 2	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 2 Bench Mark
+BENCHMARK Results
+RunTime 1527761	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 4 Bench Mark
+BENCHMARK Results
+RunTime 1588974	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 8 Bench Mark
+BENCHMARK Results
+RunTime 2122691	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 16 Bench Mark
+BENCHMARK Results
+RunTime 2724324	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+Running MarkingPsolBParallel 32 Bench Mark
+BENCHMARK Results
+RunTime 3718440	Number of FatalAttractors 3	Number of Abandoned Nodes 0	Number of sub game Fatal Attractors 0	timeout? n	Valid Solution? y
+
+
+performing benchmark for size 8
+---------------------------------------------
+
+Running Psol Bench Mark

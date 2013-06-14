@@ -87,8 +87,6 @@ public class PsolParallel {
 
 
             if (attractor.contains(node)) {
-                //System.out.println("attractor found for node " + node.getId() + " of size " + attractor.size());
-                //fatal attractor
                 fatal = true;
                 game.incrementFatalAttractorCount();
                 int player = node.getPriority() % 2;
@@ -111,11 +109,9 @@ public class PsolParallel {
                         if (attractor.contains(succ)) {
                             iterator.remove();
                             succ.removeFromPredecessors(node);
-                            //System.out.println("deleting edge for node " + node.getId() + " -> " + succ.getId());
                         }
                     }
-                    // think about this
-                    // if (node.getSuccessors().isEmpty())
+
                 }
             }
         }

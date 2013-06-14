@@ -42,6 +42,19 @@ public class PsolTest {
     }
 
     @Test
+    public void testtower8() throws Exception {
+        String path ="games/towersOfHanoi/towersOfHanoi8.game";
+        PsolGame g = Parser.parsePsolGame(path);
+        new Psol().solve(g);
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.equalSets(g.getWinningRegion0(), results.winningRegion0));
+        assertTrue(g.getNodes().isEmpty());
+
+    }
+
+
+    @Test
     public void testJurdzinskiSmall() throws Exception {
         String path ="games/jurdzinski/jurdzinski.game";
         PsolGame g = Parser.parsePsolGame(path);

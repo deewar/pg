@@ -16,8 +16,8 @@ public abstract class BasePsolExecutor extends BaseExecutor {
 
     @Override
     public void solve(ExecutionResult result) throws Exception {
-        result.noOfFatalAttactors = psolGame.getNoOfFatalAttractors();
-        result.game = psolGame;
+       result.game = psolGame;
+       super.solve(result);
     }
 
     @Override

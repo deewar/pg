@@ -12,6 +12,7 @@ public class MarkingPsolParallel {
 
     private int nThreads;
     private PsolGame game;
+    private boolean executionStopped = false;
 
     public MarkingPsolParallel(int nThreads) {
         this.nThreads = nThreads;
@@ -22,6 +23,7 @@ public class MarkingPsolParallel {
 
 
     synchronized public Node getNextNode(PsolGame game, Round round) {
+        if (executionStopped) return  null;
         round.round = this.round;
         if (game.getNodes().isEmpty()) return null;
         if (index >= game.getSortedNodes().size()) return null;
@@ -66,8 +68,12 @@ public class MarkingPsolParallel {
             markingSolverThreads[i] = new MarkingSolverThread(game, this);
             markingSolverThreads[i].start();
         }
-        for (int i = 0; i < nThreads; i++) {
-            markingSolverThreads[i].join();
+        try {
+            for (int i = 0; i < nThreads; i++) {
+                markingSolverThreads[i].join();
+            }
+        } catch (InterruptedException e) {
+            executionStopped = true;
         }
 
 
@@ -78,9 +84,11 @@ public class MarkingPsolParallel {
             game.incrementFatalAttractorCount(t.attractosFound);
             for (Node n : t.winningRegion0) {
                 winningRegion0.add(n);
+                game.deleteNode(n);
             }
             for (Node n : t.winningRegion1) {
                 winningRegion1.add(n);
+                game.deleteNode(n);
             }
 
         }
@@ -98,7 +106,7 @@ public class MarkingPsolParallel {
             }
             if (!atleastOneSuccessor) {
                 // this node has been abandoned.. add to winning region
-
+                game.incrementNoOfAbandonedNodes();
                 if (n.mark()) {
                     //System.out.println("found childless " + n);
                     int player = 1 - n.getOwner();
@@ -106,12 +114,14 @@ public class MarkingPsolParallel {
 
                         if (!winningRegion0.contains(n)) {
                             winningRegion0.add(n);
+
                         }
 
                     } else {
 
                         if (!winningRegion1.contains(n)) {
                             winningRegion1.add(n);
+
                         }
 
                     }
@@ -133,7 +143,7 @@ public class MarkingPsolParallel {
             HashSet<Node> attr = MarkingSolverUtils.generateMonotoneAttractor(nodes, k.getPriority());
             if (attr.contains(k)) {
                 //fatal attractor found
-
+                game.incrementSubGameFatalAttractors();
                 attr = MarkingSolverUtils.generateAttractor(attr, k.getPriority());
                 //System.out.println("attractor found for node " +k.getId() + "of size " + attr.size());
                 int player = k.getPriority() % 2;

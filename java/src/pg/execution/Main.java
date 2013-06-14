@@ -24,11 +24,11 @@ public class Main {
 
         switch (args[0].toLowerCase()) {
             case "clique": {
-                handleSingleParameters("cliquegame", 12);
+                handleSingleParameters("cliquegame", 11);
                 break;
             }
             case "ladder": {
-                handleSingleParameters("laddergame", 5);
+                handleSingleParameters("laddergame", 19);
                 break;
             }
             case "recursive": {
@@ -36,11 +36,11 @@ public class Main {
                 break;
             }
             case "model": {
-                handleSingleParameters("modelcheckerladder", 5);
+                handleSingleParameters("modelcheckerladder", 13);
                 break;
             }
             case "tower": {
-                handleSingleParameters("towersofhanoi", 5);
+                handleSingleParameters("towersofhanoi", 3);
                 break;
             }
             case "jurdzinski": {
@@ -51,7 +51,7 @@ public class Main {
                 handleRandom("jurdzinskigame");
                 break;
             }
-
+            default: printUsage();
 
         }
 
@@ -63,7 +63,10 @@ public class Main {
     }
 
     private static void handleJurdzinski(String gameName) throws Exception {
+        LaunchStrartup();
+
         System.out.println("Runnin n 10");
+
         int size = 1;
         for (int i = 1; i <= 5/*11*/ ; i++) {
             size = size * 2;
@@ -123,6 +126,9 @@ public class Main {
     }
 
     private static void handleSingleParameters(String gameName, int maxRounds) throws Exception {
+        LaunchStrartup();
+
+
         int size = 1;
         for (int i = 1; i <= maxRounds; i++) {
             size = size * 2;
@@ -141,6 +147,19 @@ public class Main {
         }
     }
 
+    private static void LaunchStrartup() throws Exception {
+        //warmup
+        System.out.println("Warmup Started");
+        String warmupGame = GameCreator.execute("cliquegame", "" + 128).toString();
+        warmup(new PsolSerialExecuter(warmupGame));
+        warmup(new PsolBSerialExecutor(warmupGame));
+        warmup(new PsolParallelExecuter(warmupGame,8));
+        warmup(new PsolBParallelExecutor(warmupGame,8));
+        warmup(new MarkingPsolBExecutor(warmupGame,8));
+        warmup(new MarkingPsolParallelExecuter(warmupGame,8));
+        System.out.println("warmup complete");
+    }
+
     private static void runAllSolvers(String game, Results results) throws Exception {
         System.out.println("Running Psol Bench Mark");
         System.out.println(benchmark(new PsolSerialExecuter(game), results));
@@ -150,7 +169,7 @@ public class Main {
             System.out.println("Running PsolParallel " + nthreads + " Bench Mark");
             System.out.println(benchmark(new PsolParallelExecuter(game, nthreads), results));
         }
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             nthreads = (int) Math.pow(2, i);
             System.out.println("Running MarkingPsolParallel " + nthreads + " Bench Mark");
             System.out.println(benchmark(new MarkingPsolParallelExecuter(game, nthreads), results));
@@ -159,12 +178,12 @@ public class Main {
         System.out.println("Running PsolB Bench Mark");
         System.out.println(benchmark(new PsolBSerialExecutor(game), results));
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             nthreads = (int) Math.pow(2, i);
             System.out.println("Running PsolBParallel " + nthreads + " Bench Mark");
             System.out.println(benchmark(new PsolBParallelExecutor(game, nthreads), results));
         }
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 0; i <= 5; i++) {
             nthreads = (int) Math.pow(2, i);
             System.out.println("Running MarkingPsolBParallel " + nthreads + " Bench Mark");
             System.out.println(benchmark(new MarkingPsolBExecutor(game, nthreads), results));
@@ -180,24 +199,58 @@ public class Main {
                 SolverUtilsTest.equalSets(game.getWinningRegion1(), results.winningRegion1);
     }
 
+
+    private static void warmup(IExecutable executable) throws  Exception{
+        ExecutionResult result = new ExecutionResult();
+
+        for (int i = 0; i < 20; i++) {
+            timedRun(executable,result);
+            executable.resetGame();
+            System.gc();
+        }
+    }
     private static ExecutionResult benchmark(IExecutable executable, Results results) throws Exception {
         ExecutionResult result = new ExecutionResult();
 
-        for (int i = 0; i < 5; i++) {
-            executable.solve(result);
-            executable.resetGame();
-        }
-        System.gc();
-
+        int roundsSkipped = 0;
         for (int i = 0; i < 5; i++) {
             long startTime = System.nanoTime();
-            executable.solve(result);
+            if (!timedRun(executable, result)){
+               roundsSkipped++;
+               continue;
+            }
             long endTime = System.nanoTime();
             result.runTime += endTime - startTime;
             result.validSolution = result.validSolution && validateGame(results, result.game);
             System.gc();
         }
-        result.runTime = result.runTime / 5;
+        result.runTime = result.runTime / (5-roundsSkipped);
         return result;
     }
+
+    private static boolean timedRun(final IExecutable executable, final ExecutionResult result) throws  Exception{
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    executable.solve(result);
+                } catch (Exception e) {
+                    System.out.println("dang" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+        t.join(1200000);
+        if (t.isAlive()){
+            System.out.println("timeout");
+            System.out.flush();
+            result.timeOut = true;
+            t.interrupt();
+            return false;
+        }
+        return  true;
+    }
+
 }

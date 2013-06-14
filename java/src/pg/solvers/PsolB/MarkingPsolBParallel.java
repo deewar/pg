@@ -14,6 +14,7 @@ import java.util.*;
 public class MarkingPsolBParallel {
 
     private int nThreads;
+    private boolean executionEnded = false;
 
     public MarkingPsolBParallel(int nThreads) {
         this.nThreads = nThreads;
@@ -25,9 +26,10 @@ public class MarkingPsolBParallel {
     private TreeMap<Integer, Set<Node>> nodeMap;
     Set<Integer> coloursCompleted;
     List<Integer> colours;
-    HashMap<Integer,Integer> colourRound = new HashMap<Integer, Integer>();
+    HashMap<Integer, Integer> colourRound = new HashMap<Integer, Integer>();
 
     synchronized public Set<Node> getNextNodes(PsolBGame game, Round round) {
+        if (executionEnded) return null;
         round.round = this.round;
         if (game.getNodes().isEmpty()) return null;
         if (index >= colours.size()) return null;
@@ -41,15 +43,12 @@ public class MarkingPsolBParallel {
                 round.colour = colour;
                 index++;
             }
-        } while (ret != null && checkAllMarked(ret) );
+        } while (ret != null && checkAllMarked(ret));
         if (ret == null || checkAllMarked(ret)) return null;
-        colourRound.put(round.colour,round.round);
+        colourRound.put(round.colour, round.round);
         //System.out.println("assigning colour " + round.colour);
         return ret;
     }
-
-
-
 
 
     synchronized public void restartComputation(int round) {
@@ -100,8 +99,12 @@ public class MarkingPsolBParallel {
             markingSolverThreads[i] = new MarkingSolverThread(this, game);
             markingSolverThreads[i].start();
         }
-        for (int i = 0; i < nThreads; i++) {
-            markingSolverThreads[i].join();
+        try {
+            for (int i = 0; i < nThreads; i++) {
+                markingSolverThreads[i].join();
+            }
+        } catch (InterruptedException e) {
+            executionEnded = true;
         }
 
         Set<Node> winningRegion0 = game.getWinningRegion0();
@@ -110,9 +113,11 @@ public class MarkingPsolBParallel {
             game.incrementFatalAttractorCount(t.attractorsFound);
             for (Node n : t.winningRegion0) {
                 winningRegion0.add(n);
+                game.deleteNode(n);
             }
             for (Node n : t.winningRegion1) {
                 winningRegion1.add(n);
+                game.deleteNode(n);
             }
 
         }
@@ -130,7 +135,7 @@ public class MarkingPsolBParallel {
             }
             if (!atleastOneSuccessor) {
                 // this node has been abandoned.. add to winning region
-
+                game.incrementNoOfAbandonedNodes();
                 if (n.mark()) {
                     System.out.println("found childless " + n);
                     int player = 1 - n.getOwner();
@@ -161,13 +166,13 @@ public class MarkingPsolBParallel {
             if (checkAllMarked(k)) continue;
 
 
-
             nodes.addAll(k);
             int colour = nodes.iterator().next().getPriority();
             while (!nodes.isEmpty() && !nodes.equals(cache)) {
                 cache.addAll(nodes);
                 Set<Node> monotone = MarkingSolverUtils.generateMonotoneAttractor(nodes, colour);
                 if (monotone.containsAll(nodes)) {
+                    game.incrementSubGameFatalAttractors();
                     Set<Node> attr = MarkingSolverUtils.generateAttractor(monotone, colour);
                     int player = colour % 2;
                     for (Node n : attr) {

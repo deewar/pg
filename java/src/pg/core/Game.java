@@ -10,6 +10,16 @@ public abstract class Game {
     private final HashSet<Node> winningRegion1 = new HashSet<Node>(100);
     private final HashSet<Node> winningRegion0 = new HashSet<Node>(100);
     private AtomicInteger noOfFatalAttractors = new AtomicInteger(0);
+    private volatile  int noOfAbandonedNodes  = 0;
+    private int subGameFatalAttractors  = 0;
+
+    public int getNoOfAbandonedNodes(){
+        return  noOfAbandonedNodes;
+    }
+
+    public void incrementNoOfAbandonedNodes(){
+        noOfAbandonedNodes++ ;
+    }
 
     public HashMap<Integer, Node> getNodes() {
         return nodes;
@@ -78,5 +88,13 @@ public abstract class Game {
 
     public void addNode(Node node){
         nodes.put(node.getId(),node);
+    }
+
+    public void incrementSubGameFatalAttractors() {
+        subGameFatalAttractors++;
+    }
+
+    public int getSubGameFatalAttractors(){
+        return subGameFatalAttractors;
     }
 }

@@ -15,6 +15,13 @@ public abstract class BaseExecutor implements  IExecutable{
     }
 
     @Override
+    public void solve(ExecutionResult result) throws Exception {
+        result.noOfFatalAttactors = result.game.getNoOfFatalAttractors();
+        result.noOfAbandonedNodes = result.game.getNoOfAbandonedNodes();
+        result.noOfSubGameAttractors = result.game.getSubGameFatalAttractors();
+    }
+
+    @Override
     public void resetGame() throws  Exception{
          gameFile = new StringReader(game);
     }
