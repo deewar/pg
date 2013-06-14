@@ -1,7 +1,8 @@
-package pg.solvers;
+package pg.solvers.PsolB;
 
 import pg.core.Node;
 import pg.core.PsolBGame;
+import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +22,9 @@ public class PsolB {
             nodes.addAll(nodeMap.get(color));
             while(!nodes.isEmpty() && !nodes.equals(cache)){
                 cache.addAll(nodes);
-                Set<Node> monotone = SolverUtils.generateMonotoneAttractor(nodes,color);
+                Set<Node> monotone = SolverUtils.generateMonotoneAttractor(nodes, color);
                 if(monotone.containsAll(nodes)) {
+                    game.incrementFatalAttractorCount();
                     Set<Node> attr = SolverUtils.generateAttractor(monotone, color);
                     int player = color % 2;
                     for (Node n : attr) {

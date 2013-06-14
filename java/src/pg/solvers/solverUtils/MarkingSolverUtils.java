@@ -1,12 +1,11 @@
-package pg.solvers;
-
+package pg.solvers.solverUtils;
 
 import pg.core.Node;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class SolverUtils {
+public class MarkingSolverUtils {
 
     public static HashSet<Node> generateMonotoneAttractor(Set<Node> nodes, int color){
         return generateAttractor(nodes,color,true);
@@ -26,11 +25,13 @@ public class SolverUtils {
 
         for (Node node : nodes) {
             for (Node n : node.getPredecessors()){
-                nodesToTest.add(n);
+                if (!n.isMarked()){
+                  nodesToTest.add(n);
+                }
             }
 
-            if(!coloured){
-               attractorSet.add(node);
+            if(!coloured && !node.isMarked()){
+                attractorSet.add(node);
             }
         }
 
@@ -53,9 +54,9 @@ public class SolverUtils {
                 } else {
                     boolean allLinks = true;
                     for (Node succ : n.getSuccessors()) {
-                        if (!attractorSet.contains(succ) && !nodes.contains(succ)) {
+                        if (!succ.isMarked() && !attractorSet.contains(succ) && !nodes.contains(succ)) {
                             //atleast one escape available.try this node later
-                             allLinks = false;
+                            allLinks = false;
                             break;
                         }
                     }
@@ -80,11 +81,16 @@ public class SolverUtils {
     }
 
     private static void addNodeToAttractor(HashSet<Node> attractorSet, HashSet<Node> nodesChecked, HashSet<Node> nodeForNextIteration, Node n) {
+
         attractorSet.add(n);
+
         for (Node pred : n.getPredecessors()) {
-            if (!nodesChecked.contains(pred) && !attractorSet.contains(pred)) {
+            if (!pred.isMarked() && !nodesChecked.contains(pred) && !attractorSet.contains(pred)) {
                 nodeForNextIteration.add(pred);
             }
         }
+
     }
+
+
 }

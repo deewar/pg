@@ -1,7 +1,8 @@
-package pg.solvers;
+package pg.solvers.Psol;
 
 import pg.core.Node;
 import pg.core.PsolGame;
+import pg.solvers.solverUtils.SolverUtils;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,7 +18,9 @@ public class Psol {
             HashSet<Node> attr = SolverUtils.generateMonotoneAttractor(nodes, k.getPriority());
             if (attr.contains(k)) {
                 //fatal attractor found
+                game.incrementFatalAttractorCount();
                 attr = SolverUtils.generateAttractor(attr, k.getPriority());
+                //System.out.println("attractor found for node " +k.getId() + "of size " + attr.size());
                 int player = k.getPriority() % 2;
                 for (Node n : attr) {
                     game.deleteNode(n);

@@ -1,29 +1,49 @@
 package pg.core;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public class Parser {
 
-    public static  PsolBGame parsePsolBGame(String path) throws  Exception{
+    public static  PsolBGame parsePsolBGame(String path) throws  ParseFailureException{
        PsolBGame game = new PsolBGame();
        parseGame(path,game);
        return game;
     }
-    public  static PsolGame parsePsolGame(String path) throws  Exception{
+    public  static PsolGame parsePsolGame(String path) throws  ParseFailureException{
         PsolGame game = new PsolGame();
         parseGame(path, game);
         return game;
     }
-    private static void parseGame(String path, Game game) throws ParseFailureException{
+
+    public static  PsolBGame parsePsolBGame(Reader reader) throws  ParseFailureException{
+        PsolBGame game = new PsolBGame();
+        parseGame(reader,game);
+        return game;
+    }
+    public  static PsolGame parsePsolGame(Reader reader ) throws  ParseFailureException{
+        PsolGame game = new PsolGame();
+        parseGame(reader, game);
+        return game;
+    }
+
+    private static  void parseGame (String path , Game game)throws ParseFailureException{
+        try{
+            FileReader fileReader = new FileReader(path);
+            parseGame(fileReader,game);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            throw  new ParseFailureException("unable to open file "+path);
+        }
+
+    }
+
+    private static void parseGame(Reader reader, Game game) throws ParseFailureException{
         int lineNo = 1;
         BufferedReader file = null;
         try{
-          file = new BufferedReader(new FileReader(path));
+          file = new BufferedReader(reader);
           String line = file.readLine();
           if ( !line.contains("parity")){
               throw new ParseFailureException("The file does not contain max parity");
@@ -48,9 +68,6 @@ public class Parser {
            game.initialize();
            generateSuccessors(game);
            generatePredecessors(game);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new ParseFailureException("could not open the file [" + path+"]");
         } catch (IOException e) {
             e.printStackTrace();
             throw new ParseFailureException("Failed to read line [" +  lineNo +"]");

@@ -1,10 +1,9 @@
-package pg.solvers;
+package pg.solvers.PsolB;
 
 import org.junit.Test;
-import pg.core.Parser;
-import pg.core.PsolBGame;
-import pg.core.ResultParser;
-import pg.core.Results;
+import pg.core.*;
+import pg.solvers.Psol.PsolParallel;
+import pg.solvers.solverUtils.SolverUtilsTest;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,15 +12,15 @@ import java.util.List;
 import static junit.framework.Assert.assertTrue;
 
 public class PsolBTest {
-    @Test
     public void testElevatorSmall() throws Exception {
         String path ="games/elevator/elevator.game";
         PsolBGame g = Parser.parsePsolBGame(path);
         new PsolB().solve(g);
-        assertTrue(g.getNodes().isEmpty());
+        Results results= ResultParser.parseResults(path);
+        assertTrue(SolverUtilsTest.subSet(g.getWinningRegion1(), results.winningRegion1));
+        assertTrue(SolverUtilsTest.subSet(g.getWinningRegion0(), results.winningRegion0));
 
     }
-
     @Test
     public void testJurdzinskiSmall() throws Exception {
         String path ="games/jurdzinski/jurdzinski.game";

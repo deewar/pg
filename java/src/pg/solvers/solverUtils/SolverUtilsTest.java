@@ -1,4 +1,4 @@
-package pg.solvers;
+package pg.solvers.solverUtils;
 
 import org.junit.Test;
 import pg.core.Game;
@@ -73,18 +73,47 @@ public class SolverUtilsTest {
     public  static boolean equalSets(List<Node> attr , Set<Integer> ids){
         if (attr.size()!= ids.size()) return false;
         for(Node node : attr){
-            if (!ids.contains(node.getId())) return false;
+            if (!ids.contains(node.getId()))
+                return false;
         }
         return  true;
     }
     public  static boolean equalSets(Set<Node> attr , Set<Integer> ids){
-        if (attr.size()!= ids.size()) return false;
+      /*  Set<Integer> nodeIds = new HashSet<Integer>();
+        for (Node n : attr){
+            nodeIds.add(n.getId());
+        }
+        return  nodeIds.equals(ids);
+*/
+        Set<Integer> oldIds = new HashSet<Integer>(ids);
+        if (attr.size()!= ids.size()) {
+            for ( Node n: attr ){
+                if (!ids.contains(n.getId())){
+                   System.out.println("fake " + n);
+                }
+                ids.remove(n.getId());
+            }
+            return false;
+        }
         for(Node node : attr){
-           if (!ids.contains(node.getId())) return false;
+           if (!ids.contains(node.getId())) {
+               System.out.println("faulty node  " + node);
+               return false;
+           }
         }
         return  true;
     }
 
+    public  static boolean subSet(Set<Node> attr , Set<Integer> ids){
+        if (attr.size()== ids.size()) return equalSets(attr,ids);
+        for(Node node : attr){
+            if (!ids.contains(node.getId())) {
+                System.out.println("faulty node  " + node);
+                return false;
+            }
+        }
+        return  true;
+    }
     private static HashSet<Node> testAttr( int node , Game game)throws  Exception{
         Node n = game.getNodes().get(node);
         HashSet<Node> hashSet = new HashSet<Node>();

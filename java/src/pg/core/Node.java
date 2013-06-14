@@ -2,12 +2,17 @@ package pg.core;
 
 
 import java.util.HashSet;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Node {
     private int id;
     private int priority;
     private int owner;
     private String Name;
+    private volatile boolean marked;
+    //public ReentrantReadWriteLock markingLock = new ReentrantReadWriteLock();
     private HashSet<Integer> successorsIds = new HashSet<Integer>();
     private HashSet<Node> successors = new HashSet<Node>();
     private HashSet<Node> predecessors = new HashSet<Node>();
@@ -68,32 +73,34 @@ public class Node {
         this.successorsIds = successorsIds;
     }
 
-    public void deleteNode(){
-        for (Node n : getPredecessors()){
+    public void deleteNode() {
+        for (Node n : getPredecessors()) {
             n.removeFromSuccessors(this);
         }
-        for (Node n : getSuccessors()){
+        for (Node n : getSuccessors()) {
             n.removeFromPredecessors(this);
         }
     }
 
-    public void removeSuccessor(Node n){
+    public void removeSuccessor(Node n) {
         this.removeFromSuccessors(n);
         n.removeFromPredecessors(this);
     }
 
     public void removeFromSuccessors(Node node) {
-        if (!getSuccessors().remove(node))
-            throw new RuntimeException("Tried to remove a node which never existed");
+        if (!getSuccessors().remove(node)) {
+            //throw new RuntimeException("Tried to remove a node which never existed");
+        }
     }
 
     public void removeFromPredecessors(Node node) {
-       if (!getPredecessors().remove(node))
-            throw new RuntimeException("Tried to remove a node which never existed");
+        if (!getPredecessors().remove(node)) {
+            //throw new RuntimeException("Tried to remove a node which never existed");
+        }
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Id: ");
         sb.append(getId());
@@ -102,24 +109,50 @@ public class Node {
         sb.append(" Owner: ");
         sb.append(getOwner());
         sb.append(" Succ: ");
-        for(Node n : getSuccessors()){
+        for (Node n : getSuccessors()) {
             sb.append(n.getId());
             sb.append(",");
         }
-        if (getSuccessors().size() > 0){
-            sb.deleteCharAt(sb.length()-1);
+        if (getSuccessors().size() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         sb.append(" Pred: ");
-        for(Node n : getPredecessors()){
+        for (Node n : getPredecessors()) {
             sb.append(n.getId());
             sb.append(",");
         }
-        if (getPredecessors().size() > 0){
-            sb.deleteCharAt(sb.length()-1);
+        if (getPredecessors().size() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
         }
         sb.append(" Name: ");
         sb.append(getName());
-        return  sb.toString();
+        return sb.toString();
     }
 
+    public boolean isMarked() {
+        boolean tmp;
+        //markingLock.readLock().lock();
+        tmp = marked;
+        //markingLock.readLock().unlock();
+        return tmp;
+
+    }
+
+    public boolean mark() {
+        //markingLock.writeLock().lock();
+        boolean  ret = !this.isMarked();
+        this.marked = true;
+        //markingLock.writeLock().unlock();
+        return ret;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        return this.getId() ==  ((Node)obj).getId();
+    }
+
+    @Override
+    public int hashCode(){
+       return  this.getId();
+    }
 }
